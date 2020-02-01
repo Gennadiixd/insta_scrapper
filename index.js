@@ -3,6 +3,7 @@ const { createInstaService } = require('./insta-service.js');
 
 const URL = 'https://react-id-swiper.ashernguyen.site/doc/api';
 const scrapperService = createScrapperService(URL);
+const instaService = createInstaService('gennadiixd', '05920592');
 
 // (async () => {
 //   const titleText = await scrapperSrvice.request('paragraph');
@@ -11,8 +12,12 @@ const scrapperService = createScrapperService(URL);
 
 
 (async () => {
+  const feed = await instaService.getDirectFeedPage()
+  console.log(feed)
   // instaService.getDirectInbox();
-  console.log(instaService.ig)
+  // const directInbox = await instaService.getDirectInboxMessages(); 
+  // const msgs = await directInbox();
+  // console.log(msgs)
   // await ig.simulate.preLoginFlow();
   // const loggedInUser = await ig.account.login('gennadiixd', '05920592');
   // process.nextTick(async () => await ig.simulate.postLoginFlow());

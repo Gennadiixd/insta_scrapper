@@ -1,34 +1,49 @@
 const { IgApiClient } = require('instagram-private-api');
+const { pipePromises, pipe, curry } = require('./utils');
 
-// const ig = new IgApiClient();
-// ig.state.generateDevice('gennadiixd');
+const generateIg = (account) => {
+  const ig = new IgApiClient();
+  ig.state.generateDevice(account);
+  return ig;
+};
 
-// const getCurrentUser = async () => {
-//   return ig.account.currentUser();
-// };
+const getUser = ((loggedInUser) => async ({ account, password, ig }) => {
+  if (!loggedInUser) {
+    await ig.simulate.preLoginFlow();
+    loggedInUser = await ig.account.login(account, password);
+    process.nextTick(async () => await ig.simulate.postLoginFlow());
+  }
+  return { loggedInUser, ig };
+})();
 
-// const logInToInstaService = async (ig) => {
-//   await ig.simulate.preLoginFlow();
-//   const loggedInUser = await ig.account.loggetDirectInboxin('gennadiixd', '05920592');
-//   process.nextTick(async () => await ig.simulate.postLoginFlow());
-//   return loggedInUser.pk;
-// };
+const getIg = ((ig) => ({ account, password }) => async () => {
+  if (!ig) ig = generateIg(account);
+  return { ig, account, password };
+})();
+
+const getFeed = async ({ loggedInUser, ig }) => ig.feed.directInbox(loggedInUser.pk);
+
+const getItems = async (feed) => {
+  const items = await feed.items();
+  return items.reduce((accum, item) => {
+    accum.push(item.items);
+    return accum;
+  }, []);
+}
+
+const getDirectFeed = (account, password) => (pipePromises(
+  getIg({ account, password }),
+  getUser,
+  getFeed,
+))();
 
 const createInstaService = (account, password) => ({
-  ig: new IgApiClient().state.generateDevice(account),
-  currentUser: null,
-  logInToInstaService: async function () {
-    await this.ig.simulate.preLoginFlow();
-    const loggedInUser = await this.ig.account.loggetDirectInboxin(account, password);
-    process.nextTick(async () => await this.ig.simulate.postLoginFlow());
-    this.currentUser = loggedInUser;
-  },
-  getDirectInbox: async function () {
-    if (!this.currentUser) {
-      await this.logInToInstaService();
-    }
-    return this.ig.feed.directInbox(this.currentUser.pk);
-  },
+
+  getDirectFeedPage: ((feed) => async (page) => {
+    if (!feed) feed = await getDirectFeed(account, password);
+    return getItems(feed);
+  })(),
+
 })
 
 module.exports = { createInstaService };
