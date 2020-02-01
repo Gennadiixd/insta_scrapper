@@ -1,5 +1,5 @@
-const { createScrapperService } = require('./scrapper-service');
-const { createInstaService } = require('./insta-service.js');
+const { createScrapperService } = require('./services/scrapper-service');
+const { createInstaService } = require('./services/insta-service.js/index.js');
 
 const URL = 'https://react-id-swiper.ashernguyen.site/doc/api';
 const scrapperService = createScrapperService(URL);

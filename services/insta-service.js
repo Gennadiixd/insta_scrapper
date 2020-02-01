@@ -1,5 +1,5 @@
 const { IgApiClient } = require('instagram-private-api');
-const { pipePromises, pipe, curry } = require('./utils');
+const { pipePromises, pipe, curry } = require('../helpers/utils');
 
 const generateIg = (account) => {
   const ig = new IgApiClient();
