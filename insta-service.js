@@ -26,7 +26,21 @@ const getFeed = async ({ loggedInUser, ig }) => ig.feed.directInbox(loggedInUser
 const getItems = async (feed) => {
   const items = await feed.items();
   return items.reduce((accum, item) => {
-    accum.push(item.items);
+
+    const conversation = {
+      username: item.users[0].username,
+      full_name: item.users[0].full_name,
+      chat: item.items.reduce((accum, item) => {
+        accum.push({
+          text: item.text,
+          date: new Date(1580557880052723 / 1000)
+        });
+        return accum;
+      }, []),
+      thread_id: item.thread_id
+    };
+
+    accum.push(conversation);
     return accum;
   }, []);
 }

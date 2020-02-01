@@ -12,6 +12,7 @@
     "cheerio": "^1.0.0-rc.3",
     "instagram-private-api": "^1.39.0",
     "lodash": "^4.17.15",
+    "moment": "^2.24.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.5"
   }
