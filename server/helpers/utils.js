@@ -1,4 +1,5 @@
 const pipePromises = (...promises) => promises.reduceRight((f, g) => (x) => g(x).then(f));
+const pipePromisesAsync = (...promises) => promises.reduceRight((f, g) => (x) => g(x).then(f), async (v) => v);
 const pipe = (...fns) => (x) => fns.reduce((accum, fn) => fn(accum), x);
 const curry = (fn, arr = []) => (...args) =>
   (a => a.length === fn.length
@@ -11,4 +12,4 @@ const trace = (label) => (value) => {
   return value;
 };
 
-module.exports = { trace, pipePromises, pipe, curry };
+module.exports = { trace, pipePromises, pipe, curry, pipePromisesAsync };
