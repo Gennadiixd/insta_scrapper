@@ -1,37 +1,47 @@
-const { generateIg, createConversation } = require('../helpers/instaService');
+const { createConversation } = require('../helpers/insta-helpers');
+const { generateIg } = require('./insta-session');
+
+const either = async (onLeft, onRight, expression) =>
+  expression ? onRight(e) : onLeft(e);
 
 const createInstaService = (account, password) => ({
   ig: null,
-  getIg: () => {
-    if (!this.ig) this.ig = generateIg(account);
-    return this.ig;
+  async getIg() {
+    return await either(
+      async () => this.ig = await generateIg(account, password),
+      async (ig) => ig,
+      this.ig
+    )
   },
 
-  loggedInUser: null,
-  async getLoggedInUser() {
-    if (!this.loggedInUser) {
-      const ig = this.getIg();
-      await ig.simulate.preLoginFlow();
-      this.loggedInUser = await ig.account.login(account, password);
-      process.nextTick(async () => await ig.simulate.postLoginFlow());
-    }
-    return this.loggedInUser;
+  async getUserId() {
+    const ig = await this.getIg();
+    return ig.state.cookieUserId;
   },
 
   async getFeed(feedName) {
-    const user = await this.getLoggedInUser();
-    return this.getIg().feed[feedName](user.pk);
+    const ig = await this.getIg();
+    const userId = await this.getUserId();
+    return ig.feed[feedName](userId);
   },
 
-  async getInboxItems(feed, loggedInUserId) {
+  async getInboxItems(feed) {
     const items = await feed.items();
-    return createConversation(items, loggedInUserId);
+    const userId = await this.getUserId();
+    return createConversation(items, userId);
   },
 
   async getDirectInbox() {
     const feed = await this.getFeed('directInbox');
-    const loggedInUser = await this.getLoggedInUser();
-    return this.getInboxItems(feed, loggedInUser.pk);
+    return this.getInboxItems(feed);
+  },
+
+  async sendDirectMessage() {
+    await this.getLoggedInUser();
+    const ig = await this.getIg();
+    const userId = await ig.user.getIdByUsername('vassa_alisa');
+    const thread = ig.entity.directThread([userId.toString()]);
+    await thread.broadcastText('Message from node');
   },
 
   getDirectPendingPage: ((feed) => async (page) => {

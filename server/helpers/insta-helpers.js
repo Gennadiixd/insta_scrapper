@@ -1,11 +1,3 @@
-const { IgApiClient } = require('instagram-private-api');
-
-const generateIg = (account) => {
-  const ig = new IgApiClient();
-  ig.state.generateDevice(account);
-  return ig;
-};
-
 const createChat = (chat) => {
   return chat.items.reduce((accum, item) => {
     accum.push({
@@ -32,4 +24,4 @@ const createConversation = (items, loggedInUserId) => {
   }, []);
 }
 
-module.exports = { generateIg, createChat, createConversation };
+module.exports = { createChat, createConversation };
