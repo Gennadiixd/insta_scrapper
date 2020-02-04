@@ -1,8 +1,6 @@
 const { createConversation } = require('../helpers/insta-helpers');
 const { generateIg } = require('./insta-session');
-
-const either = async (onLeft, onRight, expression) =>
-  expression ? onRight(e) : onLeft(e);
+const { either } = require('../helpers/utils');
 
 const createInstaService = (account, password) => ({
   ig: null,
@@ -36,12 +34,22 @@ const createInstaService = (account, password) => ({
     return this.getInboxItems(feed);
   },
 
-  async sendDirectMessage() {
-    await this.getLoggedInUser();
+  async getDestinationId(userName) {
     const ig = await this.getIg();
-    const userId = await ig.user.getIdByUsername('vassa_alisa');
-    const thread = ig.entity.directThread([userId.toString()]);
-    await thread.broadcastText('Message from node');
+    const userId = await ig.user.getIdByUsername(userName);
+    return userId.toString();
+  },
+
+  async getDirectTread(destinationId) {
+    const ig = await this.getIg();
+    const thread = ig.entity.directThread([destinationId]);
+    return thread;
+  },
+
+  async sendDirectMessage() {
+    const destinationId = await this.getDestinationId('vassa_alisa');
+    const thread = await this.getDirectTread(destinationId);
+    await thread.broadcastText('Test');
   },
 
   getDirectPendingPage: ((feed) => async (page) => {
