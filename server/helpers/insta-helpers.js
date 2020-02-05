@@ -17,7 +17,7 @@ const createConversation = (items, loggedInUserId) => {
       chat: createChat(item),
       thread_id: item.thread_id,
       profile_pic_url: item.users[0].profile_pic_url,
-      loggedInUserId,
+      loggedInUserId: item.viewer_id,
     };
     accum.push(conversation);
     return accum;

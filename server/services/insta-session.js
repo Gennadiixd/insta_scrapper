@@ -21,29 +21,30 @@ function getSession(type) {
 };
 
 const loginUser = async (ig, account, password) => {
-  console.trace('LOGIN')
+  console.trace('LOGIN');
   await ig.simulate.preLoginFlow();
   await ig.account.login(account, password);
   process.nextTick(async () => await ig.simulate.postLoginFlow());
   await ig.request.end$.subscribe(async () => {
     const session = await ig.state.serialize();
     delete session.constants; // this deletes the version info, so you'll always use the version provided by the library
-    // await saveSession(`session_${account}`, session);
+    await saveSession(`session_${account}`, session);
   });
   return true;
 };
 
-const generateIg = async (account, password) => {
-  const ig = new IgApiClient();
+const generateIg = ((ig) => async (account, password) => {
+  if (ig) return ig;
+  ig = new IgApiClient();
   ig.state.generateDevice(account);
   const session = await getSession(`session_${account}`);
   const eitherSession = asyncMonadEither(session);
   await eitherSession.asyncEither(
-    async () => await loginUser(ig, account, password),
-    async () => await ig.state.deserialize(session),
+    () => loginUser(ig, account, password),
+    () => ig.state.deserialize(session),
     () => !!session
   );
   return ig;
-};
+})();
 
 module.exports = { generateIg };

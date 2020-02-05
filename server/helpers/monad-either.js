@@ -17,13 +17,22 @@ const protoMonadEither = (value) => ({
 
 const asyncEitherMixin = (monad) => ({
   ...monad,
-  async asyncEither(onLeft, onRight, predicate) {
-    return (!this.error && predicate(this.value))
-      ? await asyncMonadEither(this.value).asyncOnRight(onRight)
-      : await asyncMonadEither(this.value).asyncOnLeft(onLeft);
+  asyncEither(onLeft, onRight, predicate = (value) => !!value) {
+    try {
+      const condition = !this.error && predicate(this.value);
+      if (condition) {
+        return asyncMonadEither(this.value).asyncOnRight(onRight);
+      } else {
+        throw new Error('Turned left by condition');
+      }
+    } catch (e) {
+      console.count(e);
+      return asyncMonadEither(this.value).asyncOnLeft(onLeft);
+    }
   },
-  async asyncOnLeft(fn) {
-    return await asyncPipe(
+  asyncOnLeft(fn) {
+    console.trace('ATTENTION !!!')
+    return asyncPipe(
       fn,
       pipe(
         asyncMonadEither,
@@ -31,8 +40,8 @@ const asyncEitherMixin = (monad) => ({
       )
     )(this.value);
   },
-  async asyncOnRight(fn) {
-    return await asyncPipe(
+  asyncOnRight(fn) {
+    return asyncPipe(
       fn,
       asyncMonadEither
     )(this.value);
@@ -41,10 +50,18 @@ const asyncEitherMixin = (monad) => ({
 
 const eitherMixin = (monad) => ({
   ...monad,
-  either(onLeft, onRight, predicate) {
-    return (!this.error && predicate(this.value))
-      ? monadEither(this.value).onRight(onRight)
-      : monadEither(this.value).onLeft(onLeft);
+  either(onLeft, onRight, predicate = (value) => !!value) {
+    try {
+      const condition = !this.error && predicate(this.value);
+      if (condition) {
+        return monadEither(this.value).onRight(onRight);
+      } else {
+        throw new Error('Turned left by condition');
+      }
+    } catch (e) {
+      console.count(e);
+      return monadEither(this.value).onLeft(onLeft);
+    }
   },
   onLeft(fn) {
     return pipe(
