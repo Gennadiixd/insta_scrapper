@@ -1,4 +1,21 @@
-const { createInstaService } = require('../services/insta-service');
+const { createInstaService } = require('../services/insta/insta-service');
+
+exports.getDirectChatNextPage = (req, res) => {
+  console.log(req)
+
+
+};
+
+exports.getUser = (req, res) => {
+  const account = process.env.ACCOUNT;
+  const password = process.env.PASSWORD;
+  const instaService = createInstaService(account, password);
+  console.log(`$ <==================`);
+  
+  instaService.getUser()
+    .then((userId) => res.json({ userId }))
+    .catch((err) => console.log(err))
+};
 
 exports.getDirectInbox = (req, res) => {
   // const { account, password } = req.body;
@@ -6,7 +23,7 @@ exports.getDirectInbox = (req, res) => {
   const password = process.env.PASSWORD;
   const instaService = createInstaService(account, password);
   instaService.getDirectInbox()
-    .then((feed) => res.json({ feed }))
+    .then((directInboxFeed) => res.json({ directInboxFeed }))
     .catch((err) => console.log(err))
 }
 

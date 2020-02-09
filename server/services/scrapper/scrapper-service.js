@@ -1,6 +1,6 @@
 const request = require('request-promise');
 const cheerio = require('cheerio');
-const { pipePromises, pipe, curry } = require('../helpers/utils');
+const { pipePromises, pipe, curry } = require('../../helpers/utils');
 const load = cheerio.load;
 const pipeLoad = (...fns) => pipe(load, ...fns);
 const pipeRequest = (...fns) => pipePromises(request, ...fns);

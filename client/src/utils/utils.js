@@ -1,23 +1,3 @@
-const fs = require('fs');
-
-function saveToFile(type, data) {
-  return new Promise((resolve, reject) => {
-    fs.writeFile(`${type}.txt`, JSON.stringify(data), function (error, data) {
-      if (!error) resolve('session created');
-      reject(error);
-    })
-  });
-};
-
-function getFromFile(type) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(`${type}.txt`, "utf8", function (error, data) {
-      if (error) resolve(false);
-      resolve(data);
-    })
-  })
-};
-
 const asyncPipe = (...promises) => promises.reduceRight((f, g) => (x) => g(x).then(f));
 const pipe = (...fns) => (x) => fns.reduce((accum, fn) => fn(accum), x);
 
@@ -47,4 +27,4 @@ const logEvent = (name) => (data) => {
   console.log(name, data)
 };
 
-module.exports = { getFromFile, saveToFile, trace, asyncPipe, pipe, curry, either, lensCreator, logEvent };
+export { trace, asyncPipe, pipe, curry, either, lensCreator, logEvent };
