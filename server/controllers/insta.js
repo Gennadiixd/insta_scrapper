@@ -10,8 +10,6 @@ exports.getUser = (req, res) => {
   const account = process.env.ACCOUNT;
   const password = process.env.PASSWORD;
   const instaService = createInstaService(account, password);
-  console.log(`$ <==================`);
-  
   instaService.getUser()
     .then((userId) => res.json({ userId }))
     .catch((err) => console.log(err))
@@ -25,7 +23,7 @@ exports.getDirectInbox = (req, res) => {
   instaService.getDirectInbox()
     .then((directInboxFeed) => res.json({ directInboxFeed }))
     .catch((err) => console.log(err))
-}
+};
 
 exports.getDirectPending = (req, res) => {
   const account = process.env.ACCOUNT;
@@ -34,7 +32,7 @@ exports.getDirectPending = (req, res) => {
   instaService.getDirectPendingPage()
     .then((feed) => res.json({ feed }))
     .catch((err) => console.log(err))
-}
+};
 
 exports.sendDirectMessage = (req, res) => {
   const account = process.env.ACCOUNT;
@@ -43,6 +41,6 @@ exports.sendDirectMessage = (req, res) => {
   instaService.sendDirectMessage()
     .then((feed) => res.json({ feed }))
     .catch((err) => console.log(err))
-}
+};
 
 

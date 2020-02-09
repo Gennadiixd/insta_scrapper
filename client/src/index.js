@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Routes from './routes';
+import App from './app';
 import { createStore, applyMiddleware } from 'redux';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -20,7 +20,7 @@ sagaMiddleware.run(watchUser);
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
-      <Routes />
+      <App />
     </BrowserRouter>
   </Provider>,
   document.getElementById('root'));

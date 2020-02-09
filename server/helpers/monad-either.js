@@ -17,9 +17,9 @@ const protoMonadEither = (value) => ({
 
 const asyncEitherMixin = (monad) => ({
   ...monad,
-  asyncEither(onLeft, onRight, predicate = (value) => !!value) {
+  async asyncEither(onLeft, onRight, predicate = (value) => !!value) {
     try {
-      const condition = !this.error && predicate(this.value);
+      const condition = !this.error && await predicate(this.value);
       if (condition) {
         return asyncMonadEither(this.value).asyncOnRight(onRight);
       } else {
@@ -29,6 +29,9 @@ const asyncEitherMixin = (monad) => ({
       console.count(e);
       return asyncMonadEither(this.value).asyncOnLeft(onLeft);
     }
+  },
+  asyncFlatEither(onLeft, onRight, predicate) {
+    return this.asyncEither(onLeft, onRight, predicate).flatten();
   },
   asyncOnLeft(fn) {
     console.trace('ATTENTION !!!')
@@ -52,7 +55,23 @@ const eitherMixin = (monad) => ({
   ...monad,
   either(onLeft, onRight, predicate = (value) => !!value) {
     try {
-      const condition = !this.error && predicate(this.value);
+      const condition = predicate(this.value);
+      // const condition = !this.error && predicate(this.value);
+      if (condition) {
+        return monadEither(this.value).onRight(onRight);
+      } else {
+        throw new Error('Turned left by condition');
+      }
+    } catch (e) {
+      console.count(e);
+      return monadEither(this.value).onLeft(onLeft);
+    }
+  },
+  async asyncEither(onLeft, onRight, predicate = (value) => !!value) {
+    this.value = await this.value;
+    try {
+      const condition = predicate(this.value);
+      // const condition = !this.error && predicate(this.value);
       if (condition) {
         return monadEither(this.value).onRight(onRight);
       } else {

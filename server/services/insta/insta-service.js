@@ -23,8 +23,8 @@ const getThreads = (ig) => async (feed) => {
   // const thread_id = first10[0].thread_id;
   // console.log(thread_id)
 
-  const directThread = await ig.feed.directThread({ thread_id: THREAD_ID });
-  console.log(directThread);
+  // const directThread = await ig.feed.directThread({ thread_id: THREAD_ID });
+  // console.log(directThread);
 
   // const firstPage = await directThread.items()
   // const secondPage = await directThread.items()
@@ -48,11 +48,11 @@ const getThreads = (ig) => async (feed) => {
   return threads;
 }
 
-const createInstaService = (account, password) => ({
+const createInstaService = (account, password, withRealtime) => ({
   _ig: null,
   get ig() {
     if (this._ig) return this._ig;
-    else return generateIg(account, password);
+    else return generateIg(account, password, withRealtime);
   },
 
   async getUser() {

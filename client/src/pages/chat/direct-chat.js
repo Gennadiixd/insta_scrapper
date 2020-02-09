@@ -16,8 +16,7 @@ export default function DirectChat({
   const [currentThreadId, setCurrentThreadId] = useState(null);
 
   useEffect(() => {
-    requestUser();
-    requestDirectInbox();
+    // requestDirectInbox();
   }, []);
 
   useEffect(() => {

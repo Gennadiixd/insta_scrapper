@@ -9,7 +9,6 @@ const createChat = (chat) => {
   }, []).sort((a, b) => a.date - b.date)
 };
 
-
 const createConversation = (items) => {
   const companions = [];
   const threads_ids = [];
