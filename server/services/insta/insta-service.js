@@ -1,17 +1,12 @@
-const { createConversation } = require('../../helpers/insta-helpers');
 const { generateIg } = require('./insta-session');
 const { monadEither } = require('../../helpers/monad-either');
+const { userMixin } = require('./mixins/user-mixin');
+const { feedMixin } = require('./mixins/feed-mixin');
+const { chatMixin } = require('./mixins/chat-mixin');
 
-const igError = (ig) => { throw new Error(`Expecting ig from getIg method but got => ${ig}`) };
-const feedNameError = (feedName) => { throw new Error(`Check feedName! => ${feedName}`) };
-const feedItemsError = () => { throw new Error(`Could not get feed items`) };
-const directInboxError = (err) => { throw new Error(`Could not get direct inbox items`) };
+const account = process.env.ACCOUNT;
+const password = process.env.PASSWORD;
 
-const getDirectThreadById = () => {
-
-};
-
-const getUserId = (ig) => ig.state.cookieUserId;
 // getting threads from feed
 const getThreads = (ig) => async (feed) => {
   const threads = await feed.items();
@@ -46,52 +41,20 @@ const getThreads = (ig) => async (feed) => {
   return threads;
 }
 
-const createInstaService = (account, password) => ({
+const InstaService = {
   _ig: null,
-  get ig() {
+  getIg() {
     return monadEither(this._ig)
-      .flatEither(() => generateIg(account, password))
-    // if (this._ig) return this._ig;
-    // else return generateIg(account, password, withRealtime);
+      .flatEither(async () => {
+        this._ig = await generateIg(account, password);
+        return this._ig;
+      })
   },
+  _getUserId: (ig) => ig.state.cookieUserId,
+};
 
-  async _getFeed(feedName) {
-    const ig = await this.ig;
-    return (monadEither(ig)
-      .either(igError, getUserId)
-      .either(feedNameError, (userId) => ig.feed[feedName](userId))
-      .flatEither(feedItemsError, getThreads(ig)));
-  },
+const instaFeedServise = feedMixin(InstaService);
+const instaUserServise = userMixin(InstaService);
+const instaChatServise = chatMixin(InstaService);
 
-  _getThreadsFromFeed: async (feed) => await feed.items(),
-
-  async _getDestinationId(userName) {
-    const ig = await generateIg();
-    const userId = await ig.user.getIdByUsername(userName);
-    return userId.toString();
-  },
-
-  async getUser() {
-    const ig = await this.ig;
-    return (monadEither(ig))
-      .flatEither(igError, getUserId)
-  },
-
-  async getDirectInbox() {
-    const feedItems = await this._getFeed('directInbox');
-    return monadEither(feedItems)
-      .flatEither(directInboxError, createConversation);
-  },
-
-  async getDirectChat() {
-
-  },
-
-  async sendDirectMessage() {
-    const destinationId = await this._getDestinationId('vassa_alisa');
-    const thread = await this.getDirectTread(destinationId);
-    await thread.broadcastText('Knock Knock, cat');
-  },
-})
-
-module.exports = { createInstaService };
+module.exports = { instaUserServise, instaFeedServise, instaChatServise };

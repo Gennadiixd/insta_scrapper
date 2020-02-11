@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
 // import routes
-const instaRoutes = require('./routes/insta');
+const directRoutes = require('./routes/direct');
 const userRoutes = require('./routes/user');
 
 // app
@@ -28,7 +28,7 @@ app.use(cookieParser());
 app.use(cors());
 
 // routes middleware
-app.use('/insta', instaRoutes);
+app.use('/direct', directRoutes);
 app.use('/user', userRoutes);
 
 const port = process.env.PORT || 3001

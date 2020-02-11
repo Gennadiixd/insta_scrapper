@@ -14,9 +14,11 @@ const direct = (state = initState, action) => {
   switch (type) {
     case C.REQUEST_DIRECT_INBOX_SUCCESS:
       return state
-        .setIn(['directInbox'], payload.directInboxFeed.directInbox)
-        .setIn(['companions'], payload.directInboxFeed.companions)
-        .setIn(['threads_ids'], payload.directInboxFeed.threads_ids)
+        .setIn(['directInbox'], payload.directInboxThreads.directInbox)
+        .setIn(['companions'], payload.directInboxThreads.companions)
+        .setIn(['threads_ids'], payload.directInboxThreads.threads_ids)
+    case C.REQUEST_DIRECT_NEXT_PAGE_SUCCESS:
+      return state
     // .setIn(['error'], false)
     // .setIn(['initState'], false)
     // case C.GET_PICTURE_SUCCESS:

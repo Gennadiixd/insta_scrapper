@@ -3,37 +3,30 @@ import Chat from '../../components/chat';
 import TopBar from '../../components/top-bar';
 import PermanentDrawer from '../../components/permanent-drawer';
 import UsersList from '../../components/users-list';
-import FeedDirectMessages from '../../components/feed-direct-messages';
+import DirectMessages from '../../components/direct-messages';
 import { monadEither } from '../../utils/monad-either';
 
 export default function DirectChat({
   requestDirectInbox,
   conversations,
-  threadsIds,
   companions,
-  requestUser,
+  requestDirectNextPage
 }) {
   const [currentThreadId, setCurrentThreadId] = useState(null);
-
-  useEffect(() => {
-    // requestDirectInbox();
-  }, []);
-
-  useEffect(() => {
-    setCurrentThreadId(threadsIds[0]);
-  }, [threadsIds]);
-
-  const onCurrentThreadChange = (threadId) => {
-    setCurrentThreadId(threadId);
-  };
+  const [currentPageNumber, setCurrentPageNumber] = useState(1);
+  useEffect(() => { requestDirectInbox() }, []);
+  const onCurrentThreadChange = (threadId) => setCurrentThreadId(threadId);
 
   const messages = monadEither(currentThreadId).flatEither(
     () => [],
     (currentThreadId) => conversations[currentThreadId].chat
-  )
+  );
+  const onRequestNextPage = () => {
+    console.log('\x1b[36m', 'onRequestNextPage');
+    requestDirectNextPage({ threadId: currentThreadId, pageNumber: currentPageNumber });
+    setCurrentPageNumber(currentPageNumber + 1);
+  }
 
-  console.log(messages);
-    
   return (
     <>
       <TopBar />
@@ -45,9 +38,9 @@ export default function DirectChat({
       </PermanentDrawer>
       <Chat>
         {currentThreadId && (
-          <FeedDirectMessages
+          <DirectMessages
             messages={messages}
-            currentThreadId={currentThreadId}
+            onRequestNextPage={onRequestNextPage}
           />
         )}
       </Chat>

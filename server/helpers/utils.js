@@ -3,7 +3,10 @@ const fs = require('fs');
 function saveToFile(type, data) {
   return new Promise((resolve, reject) => {
     fs.writeFile(`${type}.txt`, JSON.stringify(data), function (error, data) {
-      if (!error) resolve('session created');
+      if (!error) {
+        console.log('\x1b[36m', type + ' Saved to fs');
+        resolve('saved to fs');
+      }
       reject(error);
     })
   });

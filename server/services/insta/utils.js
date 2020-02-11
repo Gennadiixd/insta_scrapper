@@ -5,21 +5,24 @@ const { withRealtime } = require('instagram_mqtt');
 const { monadEither } = require('../../helpers/monad-either');
 const { logEvent } = require('../../helpers/utils');
 
-const restoreSession = (service, session) => service.state.deserialize(session);
+const restoreSession = (service, session) => {
+  console.log('\x1b[36m', 'Restoring session... Welcome again');
+  return service.state.deserialize(session);
+}
 
 const listen = async (ig) => {
   const subscribe = subscriptionManager(ig);
-  subscribe.on('direct', logEvent('direct'));
-  subscribe.on('message', logEvent('messageWrapper'));
+  subscribe.on('direct', logEvent('listening direct...'));
+  subscribe.on('message', logEvent('listening messageWrapper...'));
   const connectSettings = await getConnectSettings(ig);
   await ig.realtime.connect(connectSettings);
   startInstaFlow(ig);
-  console.log('LISTENING')
+  console.log('Are we online? Almost.');
   return ig;
 };
 
 const loginUser = async (ig, account, password) => {
-  console.log('\x1b[34m', 'LOGIN');
+  console.log('\x1b[34m', 'Start login flow to instagram');
   await ig.simulate.preLoginFlow();
   await ig.account.login(account, password);
   process.nextTick(async () => await ig.simulate.postLoginFlow());
@@ -36,7 +39,7 @@ const getSession = async (account, password) => {
   ig = withRealtime(new IgApiClient());
   ig.state.generateDevice(account);
   const session = await getFromFile(`session_${account}`);
-  await monadEither(session).flatEither(
+  monadEither(session).flatEither(
     async () => await loginUser(ig, account, password),
     async () => await restoreSession(ig, session)
   );

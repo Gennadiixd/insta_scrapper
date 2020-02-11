@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Pagination({onClick}) {
+export default function Pagination({ onRequestNextPage}) {
   const classes = useStyles();
 
   return (
@@ -19,7 +19,7 @@ export default function Pagination({onClick}) {
       <Button
         size="small"
         className={classes.margin}
-        onClick={onClick}
+        onClick={onRequestNextPage}
       >
         Get older messages
       </Button>

@@ -8,7 +8,7 @@ import reducer from './strore/combined-reducers';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import createSagaMiddleware from 'redux-saga';
 
-import { watchDirectInbox } from './strore/modules/direct/actions';
+import { watchDirectInbox, watchDirectNextPage } from './strore/modules/direct/actions';
 import { watchUser } from './strore/modules/user/actions';
 const sagaMiddleware = createSagaMiddleware();
 
@@ -16,6 +16,7 @@ const composeEnhancers = composeWithDevTools({});
 const store = createStore(reducer, composeEnhancers(applyMiddleware(sagaMiddleware)));
 sagaMiddleware.run(watchDirectInbox);
 sagaMiddleware.run(watchUser);
+sagaMiddleware.run(watchDirectNextPage);
 
 ReactDOM.render(
   <Provider store={store}>

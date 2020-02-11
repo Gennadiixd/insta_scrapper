@@ -5,7 +5,7 @@ const initState = fromJS({
   loading: false,
   error: false,
   initState: true,
-  direct: {},
+  user: {},
 });
 
 const user = (state = initState, action) => {
@@ -14,9 +14,7 @@ const user = (state = initState, action) => {
   switch (type) {
     case C.REQUEST_USER_SUCCESS:
       return state
-        .setIn(['directInbox'], payload.directInboxFeed.directInbox)
-        .setIn(['companions'], payload.directInboxFeed.companions)
-        .setIn(['threads_ids'], payload.directInboxFeed.threads_ids)
+        .setIn(['userId'], payload.userId)
     default:
       return state;
   }
