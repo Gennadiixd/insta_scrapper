@@ -53,7 +53,7 @@ const asyncEitherMixin = (monad) => ({
 
 const eitherMixin = (monad) => ({
   ...monad,
-  either(onLeft, onRight, predicate = (value) => !!value) {
+  either(onLeft, onRight = (value) => value, predicate = (value) => !!value) {
     try {
       const condition = predicate(this.value);
       // const condition = !this.error && predicate(this.value);

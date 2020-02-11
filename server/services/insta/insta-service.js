@@ -7,8 +7,6 @@ const feedNameError = (feedName) => { throw new Error(`Check feedName! => ${feed
 const feedItemsError = () => { throw new Error(`Could not get feed items`) };
 const directInboxError = (err) => { throw new Error(`Could not get direct inbox items`) };
 
-const THREAD_ID = '340282366841710300949128115556341185109';
-
 const getDirectThreadById = () => {
 
 };
@@ -48,17 +46,13 @@ const getThreads = (ig) => async (feed) => {
   return threads;
 }
 
-const createInstaService = (account, password, withRealtime) => ({
+const createInstaService = (account, password) => ({
   _ig: null,
   get ig() {
-    if (this._ig) return this._ig;
-    else return generateIg(account, password, withRealtime);
-  },
-
-  async getUser() {
-    const ig = await this.ig;
-    return (monadEither(ig))
-      .flatEither(igError, getUserId)
+    return monadEither(this._ig)
+      .flatEither(() => generateIg(account, password))
+    // if (this._ig) return this._ig;
+    // else return generateIg(account, password, withRealtime);
   },
 
   async _getFeed(feedName) {
@@ -69,10 +63,18 @@ const createInstaService = (account, password, withRealtime) => ({
       .flatEither(feedItemsError, getThreads(ig)));
   },
 
+  _getThreadsFromFeed: async (feed) => await feed.items(),
+
   async _getDestinationId(userName) {
     const ig = await generateIg();
     const userId = await ig.user.getIdByUsername(userName);
     return userId.toString();
+  },
+
+  async getUser() {
+    const ig = await this.ig;
+    return (monadEither(ig))
+      .flatEither(igError, getUserId)
   },
 
   async getDirectInbox() {
