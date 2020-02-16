@@ -7,8 +7,9 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
 // import routes
-const directRoutes = require('./routes/direct');
-const userRoutes = require('./routes/user');
+const threadsRoutes = require('./components/threads');
+const directRoutes = require('./components/direct');
+const userRoutes = require('./components/user');
 
 // app
 const app = express();
@@ -25,9 +26,10 @@ mongoose.connect(process.env.DATABASE, {
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
 // routes middleware
+app.use('/threads', threadsRoutes);
 app.use('/direct', directRoutes);
 app.use('/user', userRoutes);
 

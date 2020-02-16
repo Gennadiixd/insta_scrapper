@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Routes from './routes';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { requestUserAC } from './strore/modules/user/actions';
+import { requestUserAC } from './strore/modules/user-profile/actions';
 
 function App({ requestUser }) {
   useEffect(() => {

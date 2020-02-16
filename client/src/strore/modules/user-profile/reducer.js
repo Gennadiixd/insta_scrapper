@@ -8,16 +8,16 @@ const initState = fromJS({
   user: {},
 });
 
-const user = (state = initState, action) => {
+const userProfile = (state = initState, action) => {
   const { type, payload } = action;
-  console.log(payload)
+  
   switch (type) {
     case C.REQUEST_USER_SUCCESS:
       return state
-        .setIn(['userId'], payload.userId)
+        .setIn(['userInstaId'], payload.userId)
     default:
       return state;
   }
-}
+};
 
-export default user;
+export default userProfile;

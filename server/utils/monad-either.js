@@ -1,4 +1,5 @@
-const { asyncPipe, pipe, lensCreator } = require('./utils');
+const { asyncPipe, pipe } = require('./pipes');
+const { lensCreator } = require('./lens');
 
 const protoMonadEither = (value) => ({
   error: false,

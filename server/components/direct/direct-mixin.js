@@ -1,25 +1,25 @@
-const { monadEither } = require('../../../helpers/monad-either');
-const { createConversation } = require('../../../helpers/insta-helpers');
+const { monadEither } = require('../../utils/monad-either');
+const { createConversation } = require('./direct-helpers');
 const {
   igError,
   feedNameError,
   feedItemsError,
   directInboxError,
-} = require('../errors.js');
+} = require('./direct-errors');
 
-exports.feedMixin = (service) => ({
+exports.directMixin = (service) => ({
   ...service,
 
   _getThreadsFromFeed: async (feed) => await feed.items(),
 
   async _getFeed(feedName) {
-    const ig = await this.getIg();
-    return monadEither(ig)
+    return monadEither(this._getIg())
       .either(igError, this._getUserId)
-      .flatEither(feedNameError, (userId) => ig.feed[feedName](userId))
+      .flatEither(feedNameError, (userId) => this._getIg().feed[feedName](userId))
   },
 
-  async getDirectThreadsConversations() {
+  async getDirectInboxFeed(account) {
+    await this._restoreSession(account);
     const feed = await this._getFeed('directInbox');
     return monadEither(feed)
       .either(feedItemsError, this._getThreadsFromFeed)

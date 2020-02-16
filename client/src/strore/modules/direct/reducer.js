@@ -10,7 +10,7 @@ const initState = fromJS({
 
 const direct = (state = initState, action) => {
   const { type, payload } = action;
-  console.log(payload)
+  // console.log(payload)
   switch (type) {
     case C.REQUEST_DIRECT_INBOX_SUCCESS:
       return state
@@ -35,6 +35,6 @@ const direct = (state = initState, action) => {
     default:
       return state;
   }
-}
+};
 
 export default direct;

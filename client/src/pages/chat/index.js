@@ -2,7 +2,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as S from '../../strore/modules/direct/selectors';
 import { requestDirectInboxAC, requestDirectNextPageAC } from '../../strore/modules/direct/actions';
-import { requestUserAC } from '../../strore/modules/user/actions';
+import { requestUserAC } from '../../strore/modules/user-profile/actions';
 
 import DirectChat from './direct-chat';
 
