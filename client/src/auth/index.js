@@ -1,4 +1,4 @@
-import {API} from '../config';
+import { API } from '../config';
 
 export const signup = (user) => {
     return fetch(`${API}/auth/signup`, {
@@ -13,7 +13,7 @@ export const signup = (user) => {
     })
         .then(resp => resp.json())
         .catch(console.error)
-}
+};
 
 export const signin = (user) => {
     return fetch(`${API}/auth/signin`, {
@@ -28,19 +28,19 @@ export const signin = (user) => {
     })
         .then(resp => resp.json())
         .catch(console.error)
-}
+};
 
 // middleware principle
 export const setAuthInfo = (data, next) => {
     if (typeof window !== 'undefined') {
-        localStorage.setItem('jwt', JSON.stringify(data))
+        localStorage.setItem('insta_jwt', JSON.stringify(data));
     }
     next();
-}
+};
 
 export const signout = (next) => {
     if (typeof window !== 'undefined') {
-        localStorage.removeItem('jwt')
+        localStorage.removeItem('insta_jwt')
     }
     next();
     fetch(`${API}/auth/signout`, {
@@ -50,16 +50,16 @@ export const signout = (next) => {
             console.log('signout', response)
         })
         .catch(console.error)
-}
+};
 
 export const isAuthenticated = () => {
     if (typeof window == 'undefined') {
         return false
-    }
-    const formStorage = localStorage.getItem('jwt')
-    if (formStorage){
+    };
+    const formStorage = localStorage.getItem('insta_jwt');
+    if (formStorage) {
         return JSON.parse(formStorage)
     } else {
         return false
-    }
-}
+    };
+};

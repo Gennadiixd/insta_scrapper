@@ -10,15 +10,21 @@ import PrivateRoute from './auth/privateRoute';
 import AdminRoute from './auth/adminRoute';
 import AddCategory from './admin/addCategory';
 import AddProduct from './admin/addProduct';
-import ChatPage from './pages/chat';
+import DirectPage from './pages/direct';
+import MainPage from './pages/main';
+import LoginPage from './pages/login';
+import LayoutMain from './layouts/layout-main';
 
 const Routes = () => {
     return (
-        <div>
-            <BrowserRouter>
-                <Switch>
-                    <Route path="/" exact component={ChatPage} />
-                    <Route path="/chat" exact component={ChatPage} />
+        <BrowserRouter>
+            <Switch>
+                <LayoutMain>
+                    <PrivateRoute path="/" exact component={MainPage} />
+                    <Route path="/login" exact component={LoginPage} />
+                    <PrivateRoute path="/direct" exact component={DirectPage} />
+                </LayoutMain>
+                {/* <Route path="/chat" exact component={ChatPage} />
                     <Route path="/signin" exact component={Signin} />
                     <Route path="/signup" exact component={Signup} />
                     <PrivateRoute
@@ -40,10 +46,9 @@ const Routes = () => {
                         path="/create/product"
                         exact
                         component={AddProduct}
-                    />
-                </Switch>
-            </BrowserRouter>
-        </div>
+                    /> */}
+            </Switch>
+        </BrowserRouter>
     )
 }
 
