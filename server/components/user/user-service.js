@@ -1,5 +1,7 @@
 const InstaService = require('../../proto-services/insta-service');
-const { userMixin } = require('./user-mixin');
+const { userLoginMixin } = require('./user-mixins/user-login-mixin');
+const { userAuthMixin } = require('./user-mixins/user-auth-mixin');
 
-const UserService = userMixin(InstaService);
-module.exports = { UserService };
+const UserLoginService = userLoginMixin(InstaService);
+const UserAuthService = userAuthMixin(InstaService);
+module.exports = { UserLoginService, UserAuthService };

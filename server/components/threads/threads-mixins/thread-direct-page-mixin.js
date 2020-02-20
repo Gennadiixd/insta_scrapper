@@ -1,5 +1,12 @@
 const { monadEither } = require('../../../utils/monad-either');
 
+class RuntimeError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'RuntimeError';
+  }
+}
+
 exports.threadDirectPagesMixin = (service) => ({
   ...service,
 
@@ -16,7 +23,6 @@ exports.threadDirectPagesMixin = (service) => ({
 
   _deserializeState(state) {
     const _that = this;
-
     return (thread) => {
       return monadEither(state)
         .flatEither(
@@ -26,39 +32,18 @@ exports.threadDirectPagesMixin = (service) => ({
     };
   },
 
-  _getThreadById: (thread_id) => (ig) => {
-    return ig.feed.directThread({ thread_id });
+  _getThreadById(thread_id) {
+    return this._ig.feed.directThread({ thread_id });
   },
 
-  // _getThreadById: (ig) => (thread_id) => {
-  //   return ig.feed.directThread({ thread_id });
-  // },
-
-  async getThreadDirectPage(threadId, state, account) {
-    return monadEither(await this._restoreSession(account))
+  async getThreadDirectPage(threadId, state) {
+    return monadEither(this._getThreadById(threadId))
       .either(
-        () => console.trace('can not get thread'),
-        this._getThreadById(threadId)
-      ).either(
-        () => console.trace('desiarialization failure'),
+        () => { throw new RuntimeError(); },
         this._deserializeState(state)
       ).flatEither(
         () => console.trace('can not get items'),
         this._getThreadItems,
-      ).catch(console.trace)
-
-    const ig = await this._restoreSession(account);
-
-    return monadEither(threadId)
-      .either(
-        () => console.trace('can not get thread'),
-        this._getThreadById(ig)
-      ).either(
-        () => console.trace('desiarialization failure'),
-        this._deserializeState(state)
-      ).flatEither(
-        () => console.trace('can not get items'),
-        this._getThreadItems,
-      ).catch(console.log)
+      )
   },
 })

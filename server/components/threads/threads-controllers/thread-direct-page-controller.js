@@ -1,6 +1,6 @@
 const { ThreadsDirectService } = require('../threads-service');
 
-exports.getThreadDirectPage = (req, res) => {
+exports.getThreadDirectPage = (req, res, next) => {
   // if cookie restoreSession slse login
   const { account } = req.auth;
   const { threadsDirectState, threadId } = req.query;
@@ -8,5 +8,5 @@ exports.getThreadDirectPage = (req, res) => {
   ThreadsDirectService
     .getThreadDirectPage(threadId, threadsDirectState, account)
     .then((threadDirectPage) => res.json({ threadDirectPage }))
-    .catch((err) => res.json({ err }))
+    .catch(next)
 };

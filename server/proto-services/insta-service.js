@@ -14,13 +14,14 @@ const InstaService = {
 
   async _restoreSession(account) {
     const session = await getFromFile(`session_${account}`);
-    if (session) console.log('\x1b[36m', `session restored`);
+    if (!session) return false;
+    console.log('\x1b[36m', `session restored`);
     this._getIg(account).state.deserialize(session);
     return this._getIg();
   },
 
-  _getUserId(ig) {
-    return ig.state.cookieUserId
+  _getUserId() {
+    return this._ig.state.cookieUserId
   },
 };
 

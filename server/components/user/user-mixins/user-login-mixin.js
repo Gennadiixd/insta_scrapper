@@ -1,8 +1,8 @@
 const { SkywalkerSubscriptions, GraphQLSubscriptions } = require('instagram_mqtt/dist/realtime/subscriptions');
-const { saveToFile, getFromFile } = require('../../utils/file-sys');
-const { logEvent } = require('../../utils/loggers');
+const { saveToFile, getFromFile } = require('../../../utils/file-sys');
+const { logEvent } = require('../../../utils/loggers');
 
-exports.userMixin = (service) => ({
+exports.userLoginMixin = (service) => ({
   ...service,
 
   _subscriptionManager() {
@@ -59,11 +59,11 @@ exports.userMixin = (service) => ({
   async login(account, password) {
     console.log('\x1b[34m', 'Start login flow to instagram');
     this._getIg(account);
-    await this._getIg().simulate.preLoginFlow();
-    await this._getIg().account.login(account, password);
-    process.nextTick(async () => await this._getIg().simulate.postLoginFlow());
-    await this._getIg().request.end$.subscribe(async () => {
-      const session = await this._getIg().state.serialize();
+    await this._ig.simulate.preLoginFlow();
+    await this._ig.account.login(account, password);
+    process.nextTick(async () => await this._ig.simulate.postLoginFlow());
+    await this._ig.request.end$.subscribe(async () => {
+      const session = await this._ig.state.serialize();
       delete session.constants;
       await saveToFile(`session_${account}`, session);
     });

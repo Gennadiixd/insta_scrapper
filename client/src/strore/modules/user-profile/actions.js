@@ -1,10 +1,11 @@
 import * as C from './consts';
-import { userRequest } from '../../../services/requests';
+import { login } from '../../../services/requests';
 import { put, call, debounce } from "redux-saga/effects";
 
-export const requestUserAC = () => {
+export const requestUserAC = (payload) => {
   return {
     type: C.REQUEST_USER,
+    payload
   }
 };
 
@@ -15,9 +16,9 @@ export const getUserAC = (payload) => {
   }
 };
 
-export function* fetchUser() {
+export function* fetchUser({ account, password }) {
   try {
-    const resp = yield call(userRequest);
+    const resp = yield call(() => login(account, password));
     const data = yield resp.json();
     yield put(getUserAC(data));
   } catch (error) {

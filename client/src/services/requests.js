@@ -22,15 +22,15 @@ export const directChatRequest = async (account, password) => (
   fetch(`${API}/insta/direct-chat`)
 );
 
-export const userRequest = async (account, password) => (
-  fetch(`${API}/user`)
+export const login = async (account, password) => (
+  fetch(`${API}/user/login?account=${account}&password=${password}`)
 );
 
 export const nextPageThreadRequest = async ({ payload }) => {
   const { threadId, pageNumber } = payload;
   console.log('\x1b[36m', payload)
   return fetch(
-    `${API}/direct/next-page?threadId=${threadId}&pageNumber=${pageNumber}`,
+    `${ API } / direct / next - page ? threadId = ${ threadId } & pageNumber=${ pageNumber }`,
     { ...getParams }
   )
 }
