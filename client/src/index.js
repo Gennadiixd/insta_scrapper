@@ -10,6 +10,7 @@ import createSagaMiddleware from 'redux-saga';
 
 import { watchDirectInbox, watchDirectNextPage } from './store/modules/direct/actions';
 import { watchUser } from './store/modules/user-profile/actions';
+import { watchUserLogin } from './store/modules/user-auth/actions';
 const sagaMiddleware = createSagaMiddleware();
 
 const composeEnhancers = composeWithDevTools({});
@@ -17,6 +18,7 @@ const store = createStore(reducer, composeEnhancers(applyMiddleware(sagaMiddlewa
 sagaMiddleware.run(watchDirectInbox);
 sagaMiddleware.run(watchUser);
 sagaMiddleware.run(watchDirectNextPage);
+sagaMiddleware.run(watchUserLogin);
 
 ReactDOM.render(
   <Provider store={store}>

@@ -5,7 +5,7 @@ import { put, call, debounce } from "redux-saga/effects";
 export const requestUserAC = (payload) => {
   return {
     type: C.REQUEST_USER,
-    payload
+    payload,
   }
 };
 
@@ -16,9 +16,11 @@ export const getUserAC = (payload) => {
   }
 };
 
-export function* fetchUser({ account, password }) {
+export function* fetchUser(action) {
+  console.log('\x1b[36m', action);
+  
   try {
-    const resp = yield call(() => login(account, password));
+    const resp = yield call(() => login("account, password"));
     const data = yield resp.json();
     yield put(getUserAC(data));
   } catch (error) {
