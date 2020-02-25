@@ -6,11 +6,11 @@ const initState = fromJS({
   error: false,
   initState: true,
   direct: {},
+  pages: {}
 });
 
 const direct = (state = initState, action) => {
   const { type, payload } = action;
-  // console.log(payload)
   switch (type) {
     case C.REQUEST_DIRECT_INBOX_SUCCESS:
       return state
@@ -19,6 +19,14 @@ const direct = (state = initState, action) => {
         .setIn(['threads_ids'], payload.feed.threads_ids)
     case C.REQUEST_DIRECT_NEXT_PAGE_SUCCESS:
       return state
+        .setIn(['pages'], {
+          [payload.threadId]: { items: [...payload.items], state: payload.state }
+        })
+
+    // .setIn(['directInbox'], payload.feed.directInbox)
+    // .setIn(['companions'], payload.feed.companions)
+    // .setIn(['threads_ids'], payload.feed.threads_ids)
+    // return state
     // .setIn(['error'], false)
     // .setIn(['initState'], false)
     // case C.GET_PICTURE_SUCCESS:

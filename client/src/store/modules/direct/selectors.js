@@ -16,7 +16,7 @@ export const threadsIdsSelector = (state) => {
   return companions;
 };
 
-// export const threadsSelector = (state) => {
-//   const companions = getIn(state, ['direct', 'companions'], M.conversations);
-//   return companions;
-// };
+export const threadsPagesSelector = (state) => {
+  const pages = getIn(state, ['direct', 'pages'], M.conversations);
+  return pages;
+}

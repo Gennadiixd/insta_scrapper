@@ -4,14 +4,10 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import PeopleIcon from '@material-ui/icons/People';
-import BarChartIcon from '@material-ui/icons/BarChart';
 import EmailIcon from '@material-ui/icons/Email';
-import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import { NavLink } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Backdrop } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   link: {
@@ -37,11 +33,12 @@ const listMap = [
   },
 ]
 
-const ListItems = ({ }) => {
+const ListItems = () => {
   const classes = useStyles();
 
   return listMap.map((listElement) => (
     <NavLink
+      key={listElement.to}
       to={listElement.to}
       className={classes.link}
       exact
@@ -62,42 +59,6 @@ const ListItems = ({ }) => {
 export const mainListItems = (
   <div>
     <ListItems />
-    {/* <NavLink to="/" style={{ 'display': 'flex' }} exact>
-      <ListItem button>
-        <ListItemIcon>
-          <DashboardIcon />
-        </ListItemIcon>
-        <ListItemText primary="Dashboard" />
-      </ListItem>
-    </NavLink>
-
-    <NavLink to="/direct" style={{ 'display': 'flex' }} exact>
-      <ListItem button>
-        <ListItemIcon>
-          <EmailIcon />
-        </ListItemIcon>
-        <ListItemText primary="Direct" />
-      </ListItem>
-    </NavLink>
-
-    <ListItem button>
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <ListItemText primary="Customers" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Reports" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText primary="Integrations" />
-    </ListItem> */}
   </div>
 );
 

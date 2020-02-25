@@ -7,6 +7,6 @@ exports.getThreadDirectPage = (req, res, next) => {
 
   ThreadsDirectService
     .getThreadDirectPage(threadId, threadsDirectState, account)
-    .then((threadDirectPage) => res.json({ threadDirectPage }))
+    .then((threadDirectPage) => res.json({ ...threadDirectPage }))
     .catch(next)
 };

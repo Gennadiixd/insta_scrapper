@@ -1,45 +1,55 @@
 import { API } from '../config';
 
-const postParams = {
-  method: 'POST',
-  headers: {
-    Accept: 'application/json',
-    "Content-Type": 'application/json'
+const paramsMap = {
+  get: {
+    mode: 'cors',
+    credentials: 'include'
   },
-  withCredentials: true,
+  post: {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      "Content-Type": 'application/json'
+    },
+    withCredentials: true,
+  }
 };
 
-const getParams = {
-  mode: 'cors',
-  credentials: 'include'
-};
-
-export const directInboxRequest = async (token) => (
-  fetch(`${API}/direct/feed-inbox`,
-    {
-      ...getParams,
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-    })
-);
-
-export const directChatRequest = async (account, password) => (
-  fetch(`${API}/insta/direct-chat`)
-);
+const getRequestParams = (type, token) => {
+  let params = paramsMap[type];
+  if (token) params.headers = { ...params.headers, Authorization: `Bearer ${token}` }
+  return params;
+}
 
 export const login = async (account, password) => (
   fetch(
     `${API}/user/login?account=${account}&password=${password}`,
-    { ...getParams }
+    getRequestParams('get')
   )
 );
 
-export const nextPageThreadRequest = async ({ payload }) => {
-  const { threadId, pageNumber } = payload;
-  console.log('\x1b[36m', payload)
+export const auth = async (token) => (
+  fetch(
+    `${API}/user/auth`,
+    getRequestParams('get', token)
+  )
+);
+
+export const directInboxRequest = async (token) => (
+  fetch(
+    `${API}/direct/feed-inbox`,
+    getRequestParams('get', token)
+  )
+);
+
+export const directChatRequest = async () => (
+  fetch(`${API}/insta/direct-chat`)
+);
+
+export const nextPageThreadRequest = async (payload) => {
+  const { threadId, threadsDirectState } = payload;
   return fetch(
-    `${API}/direct/next-page?threadId=${threadId}&pageNumber=${pageNumber}`,
-    { ...getParams }
+    `${API}/threads/direct-page?threadId=${threadId}&threadsDirectState=${threadsDirectState}`,
+    getRequestParams('get')
   )
 }

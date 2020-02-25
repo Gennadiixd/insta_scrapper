@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Message from './message';
 import Pagination from './pagination';
 import List from '@material-ui/core/List';
 
+let id = 0;
+
 export default function DirectMessages({
-  messages,
   onRequestNextPage,
+  messages,
+  myId
 }) {
 
   return (
@@ -15,10 +18,9 @@ export default function DirectMessages({
       />
       {messages.map(
         (message) => (
-          <List>
+          <List key={id++}>
             <Message
-              key={message.date + message.text}
-            // isMyMessage={myId == message.userId}
+              isMyMessage={myId === message.userId}
             >
               {message.text}
               {/* <Date>{message.date}</Date> */}

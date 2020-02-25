@@ -25,7 +25,7 @@ export default function PermanentDrawerRight({ children }) {
       <main className={classes.content}>
         <List>
           {React.Children.map(children, (child) => (
-            <ListItemText>
+            <ListItemText key={child}>
               {child}
             </ListItemText>
           ))}

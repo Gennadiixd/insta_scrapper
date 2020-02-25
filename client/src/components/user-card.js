@@ -3,18 +3,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 
-// const useStyles = makeStyles({
-//   root: ({ isMyMessage }) => ({
-//     minWidth: 100,
-//     marginBottom: '5px',
-//     background: isMyMessage && '#E1F5FE'
-
-//   }),
-//   message: {
-//     padding: '10px',
-//   },
-// });
-
 const useStyles = makeStyles({
   root: {
     minWidth: 275,

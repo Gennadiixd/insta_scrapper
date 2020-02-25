@@ -11,7 +11,11 @@ exports.threadDirectPagesMixin = (service) => ({
 
   _deserialize: (state) => (thread) => {
     try {
-      thread.deserialize(JSON.parse(state));
+      if (typeof state === 'string') {
+        thread.deserialize(state);
+      } else {
+        thread.deserialize(JSON.parse(state));
+      }
     } catch (error) {
       console.log('\x1b[36m', error);
     };

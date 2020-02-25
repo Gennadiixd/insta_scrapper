@@ -2,6 +2,7 @@ import * as C from './consts';
 import { directInboxRequest, nextPageThreadRequest } from '../../../services/requests';
 import { put, call, debounce } from "redux-saga/effects";
 
+// pagination
 export const requestDirectNextPageAC = (payload) => {
   return {
     type: C.REQUEST_DIRECT_NEXT_PAGE,
@@ -16,20 +17,22 @@ export const receivedDirectNextPageAC = (payload) => {
   }
 };
 
-export function* fetchDirectNextPage(threadId) {
+export function* directPagesGenerator({ payload }) {
+
   try {
-    const resp = yield call(() => nextPageThreadRequest(threadId));
+    const resp = yield call(() => nextPageThreadRequest(payload));
     const data = yield resp.json();
-    yield put(receivedDirectNextPageAC(data));
+    yield put(receivedDirectNextPageAC({ ...data, threadId: payload.threadId }));
   } catch (error) {
     console.log(error);
   }
 };
 
 export function* watchDirectNextPage() {
-  yield debounce(500, C.REQUEST_DIRECT_NEXT_PAGE, fetchDirectNextPage);
+  yield debounce(500, C.REQUEST_DIRECT_NEXT_PAGE, directPagesGenerator);
 };
 
+// direct inbox feed
 export const requestDirectInboxAC = (payload) => {
   return {
     type: C.REQUEST_DIRECT_INBOX,
@@ -44,7 +47,7 @@ export const receivedDirectInboxAC = (payload) => {
   }
 };
 
-export function* fetchDirectInbox({ payload }) {
+export function* directInboxGenerator({ payload }) {
   try {
     const resp = yield call(() => directInboxRequest(payload));
     const data = yield resp.json();
@@ -55,5 +58,5 @@ export function* fetchDirectInbox({ payload }) {
 };
 
 export function* watchDirectInbox() {
-  yield debounce(500, C.REQUEST_DIRECT_INBOX, fetchDirectInbox);
+  yield debounce(500, C.REQUEST_DIRECT_INBOX, directInboxGenerator);
 };

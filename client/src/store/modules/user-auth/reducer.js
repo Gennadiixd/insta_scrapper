@@ -15,6 +15,9 @@ const userAuth = (state = initState, action) => {
     case C.USER_LOGIN_SUCCESS:
       return state
         .setIn(['userId'], payload.userId)
+    case C.USER_AUTH_SUCCESS:
+      return state
+        .setIn(['userId'], payload.userId)
     default:
       return state;
   }

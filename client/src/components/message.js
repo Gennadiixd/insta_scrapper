@@ -6,12 +6,10 @@ const useStyles = makeStyles({
   root: ({ isMyMessage }) => ({
     minWidth: 100,
     marginBottom: '5px',
-    background: isMyMessage && '#E1F5FE'
-
+    textAlign: isMyMessage && 'right',
+    background: isMyMessage && 'linear-gradient(90deg, rgba(250,250,250,1) 0%, rgba(224,224,224,1) 100%)',
+    padding: '7px',
   }),
-  message: {
-    padding: '10px',
-  },
 });
 
 export default function Message({ children, isMyMessage }) {

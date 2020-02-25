@@ -1,31 +1,32 @@
-import React, { useReducer, useEffect, useState } from 'react';
+import React from 'react';
 import Chat from '../../components/chat';
 import PermanentDrawer from '../../components/permanent-drawer';
 import UsersList from '../../components/users-list';
 import DirectMessages from '../../components/direct-messages';
-import { monadEither } from '../../utils/monad-either';
-import { useCookies } from 'react-cookie';
+import useDirect from './use-direct';
 
 export default function DirectChat({
   requestDirectNextPage,
   requestDirectInbox,
   conversations,
   companions,
+  pages
 }) {
-  const [{ t: token }] = useCookies();
-  const [currentThreadId, setCurrentThreadId] = useState(null);
-  useEffect(() => { requestDirectInbox(token) }, []);
-  const onCurrentThreadChange = (threadId) => setCurrentThreadId(threadId);
+  const [currentThreadId, setCurrentThreadId, messages, myId] =
+    useDirect(requestDirectInbox, conversations);
 
-  const messages = monadEither(currentThreadId).flatEither(
-    () => [],
-    (currentThreadId) => conversations[currentThreadId].chat
-  );
+  const onThreadChange = (threadId) => setCurrentThreadId(threadId);
 
   const onRequestNextPage = () => {
-    console.log('\x1b[36m', 'onRequestNextPage');
-    // requestDirectNextPage({ threadId: currentThreadId, pageNumber: currentPageNumber });
-    // setCurrentPageNumber(currentPageNumber + 1);
+    console.log('\x1b[36m', pages);
+    
+    let threadsDirectState;
+    try {
+      threadsDirectState = pages[currentThreadId].state;
+    } catch {
+      threadsDirectState = undefined;
+    };
+    requestDirectNextPage({ threadId: currentThreadId, threadsDirectState });
   }
 
   return (
@@ -33,7 +34,7 @@ export default function DirectChat({
       <PermanentDrawer>
         <UsersList
           users={companions}
-          onClick={onCurrentThreadChange}
+          onClick={onThreadChange}
           currentThreadId={currentThreadId}
         />
       </PermanentDrawer>
@@ -42,6 +43,7 @@ export default function DirectChat({
           <DirectMessages
             messages={messages}
             onRequestNextPage={onRequestNextPage}
+            myId={myId}
           />
         )}
       </Chat>

@@ -10,7 +10,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     requestDirectInbox: bindActionCreators(requestDirectInboxAC, dispatch),
     requestUser: bindActionCreators(requestUserAC, dispatch),
-    requestDirectNextPage: bindActionCreators(({ threadId, pageNumber }) => requestDirectNextPageAC({ threadId, pageNumber }), dispatch),
+    requestDirectNextPage: bindActionCreators((payload) => requestDirectNextPageAC(payload), dispatch),
   }
 };
 
@@ -19,6 +19,7 @@ const mapStateToProps = (state) => {
     conversations: S.conversationsSelector(state),
     companions: S.companionsSelector(state),
     threadsIds: S.threadsIdsSelector(state),
+    pages: S.threadsPagesSelector(state),
   }
 };
 

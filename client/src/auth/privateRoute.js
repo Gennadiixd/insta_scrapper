@@ -1,9 +1,11 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
+import Cookies from 'js-cookie';
 
-const renderCmp = (authPredicate, Cmp) => (props) => {
-	const isAuth = authPredicate();
+const renderCmp = (Cmp) => (props) => {
+	const token = Cookies.get('t');
+	const isAuth = !!token;
+
 	const redirectProps = {
 		pathname: '/login',
 		state: props.location
@@ -17,12 +19,10 @@ const renderCmp = (authPredicate, Cmp) => (props) => {
 };
 
 export default function PrivateRoute({ component: Component, ...restProps }) {
-	const [{ t: token }] = useCookies();
-
 	return (
 		<Route
 			{...restProps}
-			render={renderCmp(() => !!token, Component)}
+			render={renderCmp(Component)}
 		/>
 	)
 }
