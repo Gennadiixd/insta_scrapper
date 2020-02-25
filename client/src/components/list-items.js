@@ -9,21 +9,77 @@ import BarChartIcon from '@material-ui/icons/BarChart';
 import EmailIcon from '@material-ui/icons/Email';
 import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import { NavLink } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
+import { Backdrop } from '@material-ui/core';
+
+const useStyles = makeStyles(theme => ({
+  link: {
+    display: 'flex',
+    color: 'black'
+  },
+  activeLink: {
+    color: 'blue',
+    background: '#EEEEEE'
+  }
+}));
+
+const listMap = [
+  {
+    to: "/",
+    Icon: DashboardIcon,
+    text: 'Dashboard'
+  },
+  {
+    to: "/direct",
+    Icon: EmailIcon,
+    text: 'Direct'
+  },
+]
+
+const ListItems = ({ }) => {
+  const classes = useStyles();
+
+  return listMap.map((listElement) => (
+    <NavLink
+      to={listElement.to}
+      className={classes.link}
+      exact
+      activeClassName={classes.activeLink}
+    >
+      <ListItem button>
+        <ListItemIcon>
+          <listElement.Icon />
+        </ListItemIcon>
+        <ListItemText primary={listElement.text} />
+      </ListItem>
+    </NavLink>
+  )
+  )
+}
+
 
 export const mainListItems = (
   <div>
-    <ListItem button>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <EmailIcon />
-      </ListItemIcon>
-      <ListItemText primary="Direct" />
-    </ListItem>
+    <ListItems />
+    {/* <NavLink to="/" style={{ 'display': 'flex' }} exact>
+      <ListItem button>
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="Dashboard" />
+      </ListItem>
+    </NavLink>
+
+    <NavLink to="/direct" style={{ 'display': 'flex' }} exact>
+      <ListItem button>
+        <ListItemIcon>
+          <EmailIcon />
+        </ListItemIcon>
+        <ListItemText primary="Direct" />
+      </ListItem>
+    </NavLink>
+
     <ListItem button>
       <ListItemIcon>
         <PeopleIcon />
@@ -41,7 +97,7 @@ export const mainListItems = (
         <LayersIcon />
       </ListItemIcon>
       <ListItemText primary="Integrations" />
-    </ListItem>
+    </ListItem> */}
   </div>
 );
 

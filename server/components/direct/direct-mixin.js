@@ -1,4 +1,5 @@
 const { createConversation } = require('./direct-helpers');
+const { asyncPipe } = require('../../utils/pipes');
 
 exports.directMixin = (service) => ({
   ...service,
@@ -11,8 +12,10 @@ exports.directMixin = (service) => ({
   },
 
   async getDirectInboxFeed() {
-    const feed = await this._getFeed('directInbox');
-    const threads = await this._getThreadsFromFeed(feed);
-    return createConversation(threads);
+    return asyncPipe(
+      this._getFeed.bind(this),
+      this._getThreadsFromFeed,
+      async (threads) => createConversation(await threads)
+    )('directInbox');
   },
 });

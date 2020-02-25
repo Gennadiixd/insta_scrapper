@@ -1,5 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import List from '@material-ui/core/List';
+import ListItemText from '@material-ui/core/ListItemText';
 
 const drawerWidth = 240;
 
@@ -21,8 +23,13 @@ export default function PermanentDrawerRight({ children }) {
   return (
     <div className={classes.root}>
       <main className={classes.content}>
-        <div className={classes.toolbar} />
-        {children}
+        <List>
+          {React.Children.map(children, (child) => (
+            <ListItemText>
+              {child}
+            </ListItemText>
+          ))}
+        </List>
       </main>
     </div>
   );

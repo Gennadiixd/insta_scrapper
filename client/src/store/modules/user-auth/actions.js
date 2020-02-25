@@ -17,7 +17,6 @@ export const userLoginSuccessAC = (payload) => {
 };
 
 export function* userLoginGenerator({ payload: { account, password } }) {
-  console.log(account, password);
 
   try {
     const resp = yield call(() => login(account, password));

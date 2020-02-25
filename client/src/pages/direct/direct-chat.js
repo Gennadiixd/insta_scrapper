@@ -1,39 +1,40 @@
 import React, { useReducer, useEffect, useState } from 'react';
 import Chat from '../../components/chat';
-import TopBar from '../../components/top-bar';
 import PermanentDrawer from '../../components/permanent-drawer';
 import UsersList from '../../components/users-list';
 import DirectMessages from '../../components/direct-messages';
 import { monadEither } from '../../utils/monad-either';
+import { useCookies } from 'react-cookie';
 
 export default function DirectChat({
+  requestDirectNextPage,
   requestDirectInbox,
   conversations,
   companions,
-  requestDirectNextPage
 }) {
+  const [{ t: token }] = useCookies();
   const [currentThreadId, setCurrentThreadId] = useState(null);
-  const [currentPageNumber, setCurrentPageNumber] = useState(1);
-  useEffect(() => { requestDirectInbox() }, []);
+  useEffect(() => { requestDirectInbox(token) }, []);
   const onCurrentThreadChange = (threadId) => setCurrentThreadId(threadId);
 
   const messages = monadEither(currentThreadId).flatEither(
     () => [],
     (currentThreadId) => conversations[currentThreadId].chat
   );
+
   const onRequestNextPage = () => {
     console.log('\x1b[36m', 'onRequestNextPage');
-    requestDirectNextPage({ threadId: currentThreadId, pageNumber: currentPageNumber });
-    setCurrentPageNumber(currentPageNumber + 1);
+    // requestDirectNextPage({ threadId: currentThreadId, pageNumber: currentPageNumber });
+    // setCurrentPageNumber(currentPageNumber + 1);
   }
 
   return (
     <>
-      <TopBar />
       <PermanentDrawer>
         <UsersList
           users={companions}
           onClick={onCurrentThreadChange}
+          currentThreadId={currentThreadId}
         />
       </PermanentDrawer>
       <Chat>

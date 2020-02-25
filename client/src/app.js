@@ -6,7 +6,7 @@ import { requestUserAC } from './store/modules/user-profile/actions';
 
 function App({ requestUser }) {
   useEffect(() => {
-    // requestUser('test', 'test2');
+    // requestUser();
   }, []);
 
   return (

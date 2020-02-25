@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { isAuthenticated } from './index.js';
+import { useCookies } from 'react-cookie';
 
 const renderCmp = (authPredicate, Cmp) => (props) => {
 	const isAuth = authPredicate();
@@ -17,10 +17,12 @@ const renderCmp = (authPredicate, Cmp) => (props) => {
 };
 
 export default function PrivateRoute({ component: Component, ...restProps }) {
+	const [{ t: token }] = useCookies();
+
 	return (
 		<Route
 			{...restProps}
-			render={renderCmp(isAuthenticated, Component)}
+			render={renderCmp(() => !!token, Component)}
 		/>
 	)
 }

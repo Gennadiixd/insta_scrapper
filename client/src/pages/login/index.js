@@ -1,4 +1,5 @@
 import LoginPage from './login-page';
+import * as S from '../../store/modules/user-auth/selectors';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -11,4 +12,10 @@ const mapDispatchToProps = (dispatch) => {
   }
 };
 
-export default (connect(null, mapDispatchToProps)(LoginPage));
+const mapStateToProps = (state) => {
+  return {
+    userId: S.userIdSelector(state),
+  }
+};
+
+export default (connect(mapStateToProps, mapDispatchToProps)(LoginPage));

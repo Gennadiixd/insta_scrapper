@@ -46,6 +46,7 @@ export default function PermanentDrawer({ children }) {
           </ListItem>
         ))}
       </List>
+      <Divider />
       <List>
         {children}
       </List>

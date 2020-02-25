@@ -14,9 +14,9 @@ const direct = (state = initState, action) => {
   switch (type) {
     case C.REQUEST_DIRECT_INBOX_SUCCESS:
       return state
-        .setIn(['directInbox'], payload.directInboxThreads.directInbox)
-        .setIn(['companions'], payload.directInboxThreads.companions)
-        .setIn(['threads_ids'], payload.directInboxThreads.threads_ids)
+        .setIn(['directInbox'], payload.feed.directInbox)
+        .setIn(['companions'], payload.feed.companions)
+        .setIn(['threads_ids'], payload.feed.threads_ids)
     case C.REQUEST_DIRECT_NEXT_PAGE_SUCCESS:
       return state
     // .setIn(['error'], false)

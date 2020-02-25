@@ -52,6 +52,18 @@ export const signout = (next) => {
         .catch(console.error)
 };
 
+// export const isAuthenticated = () => {
+//     if (typeof window == 'undefined') {
+//         return false
+//     };
+//     const formStorage = localStorage.getItem('insta_jwt');
+//     if (formStorage) {
+//         return JSON.parse(formStorage)
+//     } else {
+//         return false
+//     };
+// };
+
 export const isAuthenticated = () => {
     if (typeof window == 'undefined') {
         return false

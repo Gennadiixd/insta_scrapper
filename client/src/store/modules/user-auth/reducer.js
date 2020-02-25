@@ -5,10 +5,10 @@ const initState = fromJS({
   loading: false,
   error: false,
   initState: true,
-  userId: undefined,
+  userId: null,
 });
 
-const userProfile = (state = initState, action) => {
+const userAuth = (state = initState, action) => {
   const { type, payload } = action;
 
   switch (type) {
@@ -20,4 +20,4 @@ const userProfile = (state = initState, action) => {
   }
 };
 
-export default userProfile;
+export default userAuth;

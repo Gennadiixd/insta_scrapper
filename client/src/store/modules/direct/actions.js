@@ -30,9 +30,10 @@ export function* watchDirectNextPage() {
   yield debounce(500, C.REQUEST_DIRECT_NEXT_PAGE, fetchDirectNextPage);
 };
 
-export const requestDirectInboxAC = () => {
+export const requestDirectInboxAC = (payload) => {
   return {
     type: C.REQUEST_DIRECT_INBOX,
+    payload
   }
 };
 
@@ -43,9 +44,9 @@ export const receivedDirectInboxAC = (payload) => {
   }
 };
 
-export function* fetchDirectInbox() {
+export function* fetchDirectInbox({ payload }) {
   try {
-    const resp = yield call(directInboxRequest);
+    const resp = yield call(() => directInboxRequest(payload));
     const data = yield resp.json();
     yield put(receivedDirectInboxAC(data));
   } catch (error) {

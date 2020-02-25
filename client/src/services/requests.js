@@ -14,8 +14,14 @@ const getParams = {
   credentials: 'include'
 };
 
-export const directInboxRequest = async (account, password) => (
-  fetch(`${API}/direct/inbox-threads`)
+export const directInboxRequest = async (token) => (
+  fetch(`${API}/direct/feed-inbox`,
+    {
+      ...getParams,
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+    })
 );
 
 export const directChatRequest = async (account, password) => (
@@ -23,14 +29,17 @@ export const directChatRequest = async (account, password) => (
 );
 
 export const login = async (account, password) => (
-  fetch(`${API}/user/login?account=${account}&password=${password}`)
+  fetch(
+    `${API}/user/login?account=${account}&password=${password}`,
+    { ...getParams }
+  )
 );
 
 export const nextPageThreadRequest = async ({ payload }) => {
   const { threadId, pageNumber } = payload;
   console.log('\x1b[36m', payload)
   return fetch(
-    `${ API } / direct / next - page ? threadId = ${ threadId } & pageNumber=${ pageNumber }`,
+    `${API}/direct/next-page?threadId=${threadId}&pageNumber=${pageNumber}`,
     { ...getParams }
   )
 }
