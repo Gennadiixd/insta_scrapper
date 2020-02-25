@@ -6,8 +6,19 @@ const { requireJwt } = require('../shared-middlewares/jwt-middleware');
 const { restoreSession } = require('../shared-middlewares/restore-session-middleware');
 const { runtimeErrorHandler } = require('../shared-middlewares/runtime-error-handler');
 
-router.get('/direct-page', requireJwt, restoreSession('ThreadsDirectService'), getThreadDirectPage, runtimeErrorHandler);
+router.get(
+  '/direct-page',
+  requireJwt,
+  restoreSession('ThreadsDirectService'),
+  getThreadDirectPage,
+  runtimeErrorHandler
+);
 
-router.post('/direct-broadcast', requireJwt, restoreSession('ThreadsDirectBroadcastService'), threadDirectBroadcast);
+router.post(
+  '/direct-broadcast',
+  requireJwt,
+  restoreSession('ThreadsDirectBroadcastService'),
+  threadDirectBroadcast
+);
 
 module.exports = router;

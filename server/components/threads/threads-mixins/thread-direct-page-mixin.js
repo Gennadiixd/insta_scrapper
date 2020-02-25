@@ -1,11 +1,4 @@
-const { monadEither } = require('../../../utils/monad-either');
-
-class RuntimeError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = 'RuntimeError';
-  }
-}
+const { pipe } = require('../../../utils/pipes');
 
 exports.threadDirectPagesMixin = (service) => ({
   ...service,
@@ -16,20 +9,13 @@ exports.threadDirectPagesMixin = (service) => ({
     return ({ items, state });
   },
 
-  _deserialize: (thread) => (state) => {
-    thread.deserialize(JSON.parse(state));
-    return thread;
-  },
-
-  _deserializeState(state) {
-    const _that = this;
-    return (thread) => {
-      return monadEither(state)
-        .flatEither(
-          () => thread,
-          _that._deserialize(thread)
-        )
+  _deserialize: (state) => (thread) => {
+    try {
+      thread.deserialize(JSON.parse(state));
+    } catch (error) {
+      console.log('\x1b[36m', error);
     };
+    return thread;
   },
 
   _getThreadById(thread_id) {
@@ -37,13 +23,10 @@ exports.threadDirectPagesMixin = (service) => ({
   },
 
   async getThreadDirectPage(threadId, state) {
-    return monadEither(this._getThreadById(threadId))
-      .either(
-        () => { throw new RuntimeError(); },
-        this._deserializeState(state)
-      ).flatEither(
-        () => console.trace('can not get items'),
-        this._getThreadItems,
-      )
+    return pipe(
+      this._getThreadById.bind(this),
+      this._deserialize(state),
+      this._getThreadItems
+    )(threadId);
   },
 })
