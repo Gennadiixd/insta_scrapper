@@ -1,6 +1,36 @@
 import * as C from './consts';
-import { directInboxRequest, nextPageThreadRequest } from '../../../services/requests';
+import { directInboxRequest, nextPageThreadRequest, directSendMessage } from '../../../services/requests';
 import { put, call, debounce } from "redux-saga/effects";
+
+//send message
+export const directSendMessageAC = (payload) => {
+  return {
+    type: C.DIRECT_SEND_MESSAGE,
+    payload
+  }
+};
+
+export const directSendMessageSuccessAC = (payload) => {
+  return {
+    type: C.DIRECT_SEND_MESSAGE_SUCCESS,
+    payload,
+  }
+};
+
+export function* directSendMessageGenerator({ payload }) {
+
+  try {
+    const resp = yield call(() => directSendMessage(payload));
+    const data = yield resp.json();
+    yield put(directSendMessageSuccessAC(data));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export function* watchDirectSendMessage() {
+  yield debounce(500, C.DIRECT_SEND_MESSAGE, directSendMessageGenerator);
+};
 
 // pagination
 export const requestDirectNextPageAC = (payload) => {

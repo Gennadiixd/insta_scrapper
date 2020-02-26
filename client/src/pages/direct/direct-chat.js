@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Chat from '../../components/chat';
 import PermanentDrawer from '../../components/permanent-drawer';
 import UsersList from '../../components/users-list';
 import DirectMessages from '../../components/direct-messages';
 import useDirect from './use-direct';
+import InputTextField from '../../components/input-text-field';
 
 export default function DirectChat({
   requestDirectNextPage,
@@ -14,20 +15,32 @@ export default function DirectChat({
 }) {
   const [currentThreadId, setCurrentThreadId, messages, myId] =
     useDirect(requestDirectInbox, conversations);
+  const [moreAvailable, setMoreAvailable] = useState(true);
+
+  useEffect(() => {
+    const threadsDirectState = getThreadsDirectState();
+    if (threadsDirectState) setMoreAvailable(JSON.parse(threadsDirectState.toString())["moreAvailable"]);
+  }, [pages, currentThreadId])
+
+  useEffect(() => {
+    if (currentThreadId && !getThreadsDirectState()) onRequestNextPage();
+  }, [currentThreadId]);
 
   const onThreadChange = (threadId) => setCurrentThreadId(threadId);
 
-  const onRequestNextPage = () => {
-    console.log('\x1b[36m', pages);
-    
+  function getThreadsDirectState() {
     let threadsDirectState;
-    try {
-      threadsDirectState = pages[currentThreadId].state;
-    } catch {
-      threadsDirectState = undefined;
-    };
-    requestDirectNextPage({ threadId: currentThreadId, threadsDirectState });
-  }
+    try { threadsDirectState = pages[currentThreadId].state }
+    catch { threadsDirectState = undefined };
+    return threadsDirectState;
+  };
+
+  function onRequestNextPage() {
+    requestDirectNextPage({
+      threadId: currentThreadId,
+      threadsDirectState: getThreadsDirectState()
+    });
+  };
 
   return (
     <>
@@ -40,11 +53,15 @@ export default function DirectChat({
       </PermanentDrawer>
       <Chat>
         {currentThreadId && (
-          <DirectMessages
-            messages={messages}
-            onRequestNextPage={onRequestNextPage}
-            myId={myId}
-          />
+          <>
+            <DirectMessages
+              messages={messages}
+              onRequestNextPage={onRequestNextPage}
+              myId={myId}
+              moreAvailable={moreAvailable}
+            />
+            <InputTextField />
+          </>
         )}
       </Chat>
     </>

@@ -13,6 +13,7 @@ const useStyles = makeStyles(theme => ({
   content: {
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing(3),
+    paddingTop: 0,
     width: `calc(100% - ${drawerWidth}px)`,
   },
 }));
@@ -33,4 +34,4 @@ export default function PermanentDrawerRight({ children }) {
       </main>
     </div>
   );
-}
+};

@@ -17,7 +17,7 @@ import { mainListItems, secondaryListItems } from '../components/list-items';
 import Box from '@material-ui/core/Box';
 import Copyright from '../components/copyright';
 import { titleMap } from './title-map';
-const drawerWidth = 240;
+const drawerWidth = 180;
 
 const useStyles = makeStyles(theme => ({
   root: {

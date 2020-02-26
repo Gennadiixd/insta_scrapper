@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Pagination({ onRequestNextPage}) {
+export default function Pagination({ onRequestNextPage, moreAvailable }) {
   const classes = useStyles();
 
   return (
@@ -20,6 +20,7 @@ export default function Pagination({ onRequestNextPage}) {
         size="small"
         className={classes.margin}
         onClick={onRequestNextPage}
+        disabled={!moreAvailable}
       >
         Get older messages
       </Button>

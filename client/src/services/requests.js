@@ -15,11 +15,12 @@ const paramsMap = {
   }
 };
 
-const getRequestParams = (type, token) => {
+const getRequestParams = (type, token, body) => {
   let params = paramsMap[type];
-  if (token) params.headers = { ...params.headers, Authorization: `Bearer ${token}` }
+  if (token) params.headers = { ...params.headers, Authorization: `Bearer ${token}` };
+  if (body) params.body = body;
   return params;
-}
+};
 
 export const login = async (account, password) => (
   fetch(
@@ -42,14 +43,18 @@ export const directInboxRequest = async (token) => (
   )
 );
 
-export const directChatRequest = async () => (
-  fetch(`${API}/insta/direct-chat`)
-);
-
 export const nextPageThreadRequest = async (payload) => {
   const { threadId, threadsDirectState } = payload;
   return fetch(
     `${API}/threads/direct-page?threadId=${threadId}&threadsDirectState=${threadsDirectState}`,
     getRequestParams('get')
   )
-}
+};
+
+export const directSendMessage = async (payload) => {
+  const { token, userName, message } = payload;
+  return fetch(
+    `${API}/threads/direct-broadcast`,
+    getRequestParams('post', token, { userName, message })
+  )
+};

@@ -1,25 +1,31 @@
 const { pipe } = require('../../../utils/pipes');
+const { createChat } = require('../../direct/direct-helpers');
 
 exports.threadDirectPagesMixin = (service) => ({
   ...service,
 
-  async _getThreadItems(thread) {
-    const items = await thread.items();
+  async _getThreadItems({ thread, isDeserialized }) {
+    const items = createChat(await thread.items());
     const state = thread.serialize();
+    if (!isDeserialized) {
+      return ({ items: [], state });
+    }
     return ({ items, state });
   },
 
   _deserialize: (state) => (thread) => {
+    let isDeserialized = false;
     try {
       if (typeof state === 'string') {
         thread.deserialize(state);
       } else {
         thread.deserialize(JSON.parse(state));
-      }
+      };
+      isDeserialized = true;
     } catch (error) {
       console.log('\x1b[36m', error);
     };
-    return thread;
+    return { thread, isDeserialized };
   },
 
   _getThreadById(thread_id) {
