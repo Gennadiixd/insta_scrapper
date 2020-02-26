@@ -18,5 +18,5 @@ export const threadsIdsSelector = (state) => {
 
 export const threadsPagesSelector = (state) => {
   const pages = getIn(state, ['direct', 'pages'], M.conversations);
-  return pages;
+  return pages.toJS();
 }

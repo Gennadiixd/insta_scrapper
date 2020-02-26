@@ -19,9 +19,9 @@ const direct = (state = initState, action) => {
         .setIn(['threads_ids'], payload.feed.threads_ids)
     case C.REQUEST_DIRECT_NEXT_PAGE_SUCCESS:
       return state
-        .setIn(['pages'], {
-          [payload.threadId]: { items: [...payload.items], state: payload.state }
-        })
+        .mergeDeepIn(['pages', payload.threadId], { state: payload.state, items: payload.items })
+        
+    // .updateIn(['pages', payload.threadId, 'items'], arr => arr)
 
     // .setIn(['directInbox'], payload.feed.directInbox)
     // .setIn(['companions'], payload.feed.companions)
