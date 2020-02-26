@@ -20,14 +20,15 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function InputTextField() {
+export default function InputTextField({ onSubmit: submit }) {
   const classes = useStyles();
 
   return (
     <Formik
       initialValues={{ message: '' }}
-      onSubmit={(values) => {
-        console.log(values, null, 2);
+      onSubmit={(values, { resetForm }) => {
+        submit(values.message);
+        resetForm({});
       }}
     >
       {({ handleSubmit, values, isSubmitting, handleChange }) => (

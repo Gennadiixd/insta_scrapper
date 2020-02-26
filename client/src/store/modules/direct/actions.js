@@ -18,7 +18,7 @@ export const directSendMessageSuccessAC = (payload) => {
 };
 
 export function* directSendMessageGenerator({ payload }) {
-
+  
   try {
     const resp = yield call(() => directSendMessage(payload));
     const data = yield resp.json();

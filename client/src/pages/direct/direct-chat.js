@@ -9,11 +9,12 @@ import InputTextField from '../../components/input-text-field';
 export default function DirectChat({
   requestDirectNextPage,
   requestDirectInbox,
+  directSendMessage,
   conversations,
   companions,
   pages
 }) {
-  const [currentThreadId, setCurrentThreadId, messages, myId] =
+  const [currentThreadId, setCurrentThreadId, messages, myId, token] =
     useDirect(requestDirectInbox, conversations);
   const [moreAvailable, setMoreAvailable] = useState(true);
 
@@ -42,6 +43,11 @@ export default function DirectChat({
     });
   };
 
+  function onSendMessage(message) {
+    const userName = conversations[currentThreadId].username;
+    directSendMessage({ token, userName, message });
+  };
+
   return (
     <>
       <PermanentDrawer>
@@ -60,7 +66,9 @@ export default function DirectChat({
               myId={myId}
               moreAvailable={moreAvailable}
             />
-            <InputTextField />
+            <InputTextField
+              onSubmit={onSendMessage}
+            />
           </>
         )}
       </Chat>

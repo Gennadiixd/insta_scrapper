@@ -11,6 +11,9 @@ const paramsMap = {
       Accept: 'application/json',
       "Content-Type": 'application/json'
     },
+    body: {
+
+    },
     withCredentials: true,
   }
 };
@@ -18,7 +21,7 @@ const paramsMap = {
 const getRequestParams = (type, token, body) => {
   let params = paramsMap[type];
   if (token) params.headers = { ...params.headers, Authorization: `Bearer ${token}` };
-  if (body) params.body = body;
+  if (body) params.body = JSON.stringify({ ...params.body, ...body });
   return params;
 };
 
@@ -53,6 +56,10 @@ export const nextPageThreadRequest = async (payload) => {
 
 export const directSendMessage = async (payload) => {
   const { token, userName, message } = payload;
+
+  console.log('\x1b[36m', getRequestParams('post', token, { userName, message }));
+
+
   return fetch(
     `${API}/threads/direct-broadcast`,
     getRequestParams('post', token, { userName, message })

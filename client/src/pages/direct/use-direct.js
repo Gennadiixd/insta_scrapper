@@ -20,7 +20,7 @@ function useDirect(requestDirectInbox, conversations) {
     };
   }, [conversations, currentThreadId]);
 
-  return [currentThreadId, setCurrentThreadId, messages, myId];
+  return [currentThreadId, setCurrentThreadId, messages, myId, token];
 }
 
 export default useDirect;

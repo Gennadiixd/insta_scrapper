@@ -8,7 +8,7 @@ import reducer from './store/combined-reducers';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import createSagaMiddleware from 'redux-saga';
 
-import { watchDirectInbox, watchDirectNextPage } from './store/modules/direct/actions';
+import { watchDirectInbox, watchDirectNextPage, watchDirectSendMessage } from './store/modules/direct/actions';
 // import { watchUser } from './store/modules/user-profile/actions';
 import { watchUserLogin, watchUserAuth } from './store/modules/user-auth/actions';
 const sagaMiddleware = createSagaMiddleware();
@@ -19,7 +19,7 @@ sagaMiddleware.run(watchUserLogin);
 sagaMiddleware.run(watchUserAuth);
 sagaMiddleware.run(watchDirectInbox);
 sagaMiddleware.run(watchDirectNextPage);
-// sagaMiddleware.run(watchUser);
+sagaMiddleware.run(watchDirectSendMessage);
 
 ReactDOM.render(
   <Provider store={store}>
