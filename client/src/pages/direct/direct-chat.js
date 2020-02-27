@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Chat from '../../components/chat';
 import PermanentDrawer from '../../components/permanent-drawer';
 import UsersList from '../../components/users-list';
 import DirectMessages from '../../components/direct-messages';
 import useDirect from './use-direct';
 import InputTextField from '../../components/input-text-field';
+import WSChat from './websocket';
+import WSProvider from '../../ws/ws-provider';
 
 export default function DirectChat({
   requestDirectNextPage,
@@ -26,6 +28,17 @@ export default function DirectChat({
   useEffect(() => {
     if (currentThreadId && !getThreadsDirectState()) onRequestNextPage();
   }, [currentThreadId]);
+
+  const WS = useContext(WSProvider.Context);
+
+  useEffect(() => {
+    WS.registerOnMessageCallback(console.log);
+  }, [WS.registerOnMessageCallback]);
+
+  const tryToSend = () => {
+    console.log('\x1b[36m', 'send message');
+    WS.onSendMessage('Hello World');
+  }
 
   const onThreadChange = (threadId) => setCurrentThreadId(threadId);
 
@@ -57,6 +70,13 @@ export default function DirectChat({
           currentThreadId={currentThreadId}
         />
       </PermanentDrawer>
+      <div
+        style={{ background: 'red', width: ' 300px', height: '300px' }}
+        onClick={tryToSend}
+      >
+
+      </div>
+      {/* <WSChat /> */}
       <Chat>
         {currentThreadId && (
           <>

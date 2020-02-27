@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import reducer from './store/combined-reducers';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import createSagaMiddleware from 'redux-saga';
+import { startWebsocketConnection } from './ws/config';
 
 import { watchDirectInbox, watchDirectNextPage, watchDirectSendMessage } from './store/modules/direct/actions';
 // import { watchUser } from './store/modules/user-profile/actions';
@@ -29,3 +30,4 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root')
 );
+startWebsocketConnection();
