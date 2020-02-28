@@ -5,12 +5,13 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const { verifyClient } = require('./components/ws-chat/verify-client.js');
 
 // app
 const app = express();
 
 //websockets
-const expressWs = require('express-ws')(app);
+require('express-ws')(app, null, { wsOptions: { verifyClient } });
 
 // import routes
 const threadsRoutes = require('./components/threads');
@@ -24,7 +25,7 @@ mongoose.connect(process.env.DATABASE, {
   useCreateIndex: true,
 }).then(() => {
   console.log("DB Connected")
-})
+});
 
 // middlewares
 app.use(morgan('dev'));
@@ -38,8 +39,8 @@ app.use('/threads', threadsRoutes);
 app.use('/direct', directRoutes);
 app.use('/user', userRoutes);
 
-const port = process.env.PORT || 3001
+const port = process.env.PORT || 3001;
 
 app.listen(port, () => {
   console.log(`server listening on ${port}`)
-})
+});

@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const wsHandler = require('./chat-controller');
-const { requireJwt } = require('../shared-middlewares/jwt-middleware');
+const { wsHandler } = require('./chat-controller');
 
 router.ws(
   '/chat',

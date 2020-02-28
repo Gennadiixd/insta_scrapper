@@ -2,6 +2,7 @@ const { SkywalkerSubscriptions, GraphQLSubscriptions } = require('instagram_mqtt
 const { saveToFile } = require('../../../utils/file-sys');
 const { logEvent } = require('../../../utils/loggers');
 const { LoginError } = require('../user-errors');
+const { wsHandler } = require('../../ws-chat/chat-controller');
 
 exports.userLoginMixin = (service) => ({
   ...service,
@@ -54,6 +55,7 @@ exports.userLoginMixin = (service) => ({
 
   _startInstaFlow() {
     setTimeout(() => {
+      wsHandler.WSSend('29162819445')('message from flow')
       console.log('Device off');
       this._ig.realtime.direct.sendForegroundState({ inForegroundApp: false, inForegroundDevice: false, keepAliveTimeout: 900 });
     }, 2000);
