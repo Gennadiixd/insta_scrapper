@@ -5,7 +5,7 @@ import { startWebsocketConnection } from '../ws/config';
 
 function setUUIDToLocalStorage(uuid) {
   if (typeof window !== 'undefined') {
-    localStorage.setItem('uuid', JSON.stringify(uuid))
+    localStorage.setItem('uuid', JSON.stringify(uuid));
   }
 }
 
