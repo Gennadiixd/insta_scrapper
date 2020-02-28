@@ -26,9 +26,13 @@ const createPullsCollection = () => ({
       processedParam = JSON.stringify(param);
     };
     const pull = this._getPull(pullId);
-    for (let key in pull) {
-      pull[key][fn](processedParam);
-    }
+    for (let connectionId in pull) {
+      if (pull[connectionId].readyState == pull[connectionId].OPEN) {
+        pull[connectionId][fn](processedParam);
+      } else {
+        this.removeConnection(pullId, connectionId);
+      };
+    };
   }
 
 });

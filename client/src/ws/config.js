@@ -1,6 +1,7 @@
 const host = process.env.REACT_APP_API_URL.replace(/^http/, 'ws');
 
 let send;
+let connection;
 let onWSMessageReceived;
 
 export const startWebsocketConnection = (uuid) => {
@@ -17,11 +18,14 @@ export const startWebsocketConnection = (uuid) => {
     onWSMessageReceived && onWSMessageReceived(e.data);
   };
   send = ws.send.bind(ws);
+  connection = ws;
   return ws;
 };
 
 export const onSendMessage = (message) => {
-  send(message);
+  if (connection.readyState == connection.OPEN) {
+    connection.send(message);
+  };
 };
 
 export const registerOnMessageCallback = (fn) => {
