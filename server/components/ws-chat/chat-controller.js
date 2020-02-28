@@ -1,34 +1,27 @@
-// const connections = new Set();
-const connections = {};
-const jwt = require('express-jwt');
-
-const jwtParams = {
-  secret: process.env.JWT_SECRET,
-  userProperty: "auth",
-  getToken: (req) => req.cookies.t
-};
+const createPullsCollection = require('./create-pulls-collection');
+const PullCollection = createPullsCollection();
 
 function wsHandler(ws, req) {
-  // console.log('\x1b[36m', req.cookies);
-  console.log('\x1b[36m', req.auth);
-  
-  connections[req.auth.userId] = ws;
-  
+  id = req.query.uuid;
+  const pullId = req.auth.userId;
+
+  PullCollection.addConnection(pullId, id, ws)
+
   ws.on('message', (message) => {
-    console.log('\x1b[36m', message);
-    
-    connections[req.auth.userId].send(message);
+    PullCollection.mapPull(pullId, 'send', message);
   });
 
-  ws.on('close', (req) => {
-    delete connections[req.auth.userId];
+  ws.on('close', (code) => {
+    PullCollection.removeConnection(pullId, id);
   });
 
-  wsHandler.WSSend = (userId) => {
-    if (connections[userId]) {
-      return connections[userId].send.bind(connections[userId]);
-    }
+  wsHandler.WSSend = (pullId, message) => {
+    PullCollection.mapPull(pullId, 'send', message);
   };
 };
 
-module.exports = { wsHandler };
+const WSSendMessage = (pullId) => (message) => {
+  wsHandler.WSSend(pullId, message);
+};
+
+module.exports = { wsHandler, WSSendMessage };

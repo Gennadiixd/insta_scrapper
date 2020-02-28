@@ -31,9 +31,9 @@ export default function DirectChat({
 
   const WS = useContext(WSProvider.Context);
 
-  useEffect(() => {
-    WS.registerOnMessageCallback(console.log);
-  }, [WS.registerOnMessageCallback]);
+  // useEffect(() => {
+  //   WS.registerOnMessageCallback(console.log);
+  // }, [WS.registerOnMessageCallback]);
 
   const tryToSend = () => {
     console.log('\x1b[36m', 'send message');

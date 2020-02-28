@@ -11,13 +11,13 @@ import WSProvider from './ws/ws-provider';
 const Routes = () => {
 	return (
 		<Switch>
-			<LayoutMain>
-				<WSProvider>
+			<Route path="/login" exact component={LoginPage} />
+			<WSProvider>
+				<LayoutMain>
 					<PrivateRoute path="/" exact component={MainPage} />
 					<PrivateRoute path="/direct" exact component={DirectPage} />
-				</WSProvider>
-				<Route path="/login" exact component={LoginPage} />
-			</LayoutMain>
+				</LayoutMain>
+			</WSProvider>
 		</Switch>
 	)
 }

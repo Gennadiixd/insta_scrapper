@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -15,6 +15,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from '../components/list-items';
 import { titleMap } from './title-map';
+
 const drawerWidth = 180;
 
 const useStyles = makeStyles(theme => ({
@@ -105,7 +106,7 @@ export default function LayoutMain({ children, location: { pathname } }) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
+  
   const title = titleMap[pathname];
 
   return (

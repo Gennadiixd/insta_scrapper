@@ -16,7 +16,7 @@ exports.login = (req, res, next) => {
 };
 
 exports.auth = (req, res, next) => {
-  const { account } = req.query;
+  const { account } = req.auth;
   
   return UserAuthService
     .checkSession(account)
