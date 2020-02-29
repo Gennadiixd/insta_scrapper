@@ -32,12 +32,12 @@ export default function DirectChat({
   const WS = useContext(WSProvider.Context);
 
   // useEffect(() => {
-  //   WS.registerOnMessageCallback(console.log);
-  // }, [WS.registerOnMessageCallback]);
+  //   WS.WSOnMessage(console.log);
+  // }, [WS.WSOnMessage]);
 
   const tryToSend = () => {
     console.log('\x1b[36m', 'send message');
-    WS.onSendMessage('Hello World');
+    WS.WSSend('Hello World');
   }
 
   const onThreadChange = (threadId) => setCurrentThreadId(threadId);

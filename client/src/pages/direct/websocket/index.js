@@ -2,7 +2,7 @@ import React from 'react'
 
 import MessageWindow from './message-window'
 import TextInput from './text-input'
-import { registerOnMessageCallback, send } from './websocket'
+import { WSOnMessage, send } from './websocket'
 
 export class WSChat extends React.Component {
   state = {
@@ -12,7 +12,7 @@ export class WSChat extends React.Component {
 
   constructor(props) {
     super(props)
-    registerOnMessageCallback(this.onMessageReceived.bind(this))
+    WSOnMessage(this.onMessageReceived.bind(this))
   }
 
   onMessageReceived(msg) {

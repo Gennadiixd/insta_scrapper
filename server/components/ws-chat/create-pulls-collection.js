@@ -22,7 +22,7 @@ const createPullsCollection = () => ({
 
   mapPull(pullId, fn, param) {
     let processedParam = param;
-    if (fn === 'send') {
+    if (fn === 'send' && typeof param !== 'string') {
       processedParam = JSON.stringify(param);
     };
     const pull = this._getPull(pullId);
