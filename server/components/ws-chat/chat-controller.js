@@ -15,13 +15,13 @@ function wsHandler(ws, req) {
     PullCollection.removeConnection(pullId, id);
   });
 
-  wsHandler.WSSend = (pullId, message) => {
+  wsHandler._WSSend = (pullId, message) => {
     PullCollection.mapPull(pullId, 'send', message);
   };
 };
 
 const WSSendMessage = (pullId) => (message) => {
-  wsHandler.WSSend(pullId, message);
+  wsHandler._WSSend(pullId, message);
 };
 
 module.exports = { wsHandler, WSSendMessage };

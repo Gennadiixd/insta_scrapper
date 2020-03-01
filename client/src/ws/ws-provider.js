@@ -6,9 +6,9 @@ export default function WSProvider({ children, ...props }) {
   WSProvider.Context = WSContext;
   const [ws, WSSend, WSOnMessage] = useInitWS();
 
-  React.useEffect(() => {
-    WSOnMessage(console.log);
-  }, [WSOnMessage]);
+  // React.useEffect(() => {
+  //   WSOnMessage(console.log);
+  // }, [WSOnMessage]);
 
   return (
     <WSContext.Provider

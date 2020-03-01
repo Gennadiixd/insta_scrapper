@@ -1,46 +1,37 @@
 import React from 'react';
 import Message from './message';
-import Pagination from './pagination';
 import List from '@material-ui/core/List';
-import { makeStyles } from '@material-ui/core/styles';
-import InputTextField from './input-text-field';
-const useStyles = makeStyles(theme => ({
-  chatContainer: {
-    borderBottom: '2px solid white',
-    overflowY: 'scroll',
-    height: '450px',
-  },
-}));
-
-let id = 0;
+import { Element, Events, animateScroll as scroll, scroller } from 'react-scroll';
 
 export default function DirectMessages({
-  onRequestNextPage,
-  moreAvailable,
   messages,
   myId,
 }) {
-  const classes = useStyles();
-
   return (
-    <>
-      <Pagination
-        onRequestNextPage={onRequestNextPage}
-        moreAvailable={moreAvailable}
-      />
-      <List className={classes.chatContainer}>
-        {messages.map(
-          (message) => (
-            <Message
-              isMyMessage={myId === message.userId}
-              key={id++}
+    <List >
+      {messages.map(
+        (message, i) => {
+          let name = '';
+          if (messages.length - 1 === i) {
+            name = 'lastMessage';
+          };
+          if (i === 0) {
+            name = 'firstMessage';
+          };
+          return (
+            <Element
+              name={name}
+              key={message.text + message.userId + message.date}
             >
-              {message.text}
-              {/* <Date>{message.date}</Date> */}
-            </Message>
-          ))}
-      </List>
-    </>
-  )
+              <Message
+                isMyMessage={myId === message.userId}
+              >
+                {message.text}
+                {/* <Date>{message.date}</Date> */}
+              </Message>
+            </Element>
+          )
+        })}
+    </List>
+  );
 };
-

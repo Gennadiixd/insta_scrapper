@@ -21,7 +21,7 @@ const paramsMap = {
 const getRequestParams = (type, token, body) => {
   let params = paramsMap[type];
   if (token) params.headers = { ...params.headers, Authorization: `Bearer ${token}` };
-  if (body) params.body = JSON.stringify({ ...params.body, ...body });
+  if (body) params.body = JSON.stringify({ ...body });
   return params;
 };
 

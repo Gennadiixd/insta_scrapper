@@ -5,8 +5,9 @@ import UsersList from '../../components/users-list';
 import DirectMessages from '../../components/direct-messages';
 import useDirect from './use-direct';
 import InputTextField from '../../components/input-text-field';
-import WSChat from './websocket';
 import WSProvider from '../../ws/ws-provider';
+import useScroll from './use-scroll';
+import Pagination from '../../components/pagination';
 
 export default function DirectChat({
   requestDirectNextPage,
@@ -19,11 +20,12 @@ export default function DirectChat({
   const [currentThreadId, setCurrentThreadId, messages, myId, token] =
     useDirect(requestDirectInbox, conversations);
   const [moreAvailable, setMoreAvailable] = useState(true);
+  const [AnchorLink, ElementWrapper] = useScroll('lastMessage', 'containerElement');
 
   useEffect(() => {
     const threadsDirectState = getThreadsDirectState();
     if (threadsDirectState) setMoreAvailable(JSON.parse(threadsDirectState.toString())["moreAvailable"]);
-  }, [pages, currentThreadId])
+  }, [pages, currentThreadId]);
 
   useEffect(() => {
     if (currentThreadId && !getThreadsDirectState()) onRequestNextPage();
@@ -35,10 +37,10 @@ export default function DirectChat({
   //   WS.WSOnMessage(console.log);
   // }, [WS.WSOnMessage]);
 
-  const tryToSend = () => {
-    console.log('\x1b[36m', 'send message');
-    WS.WSSend('Hello World');
-  }
+  // const tryToSend = () => {
+  //   console.log('\x1b[36m', 'send message');
+  //   WS.WSSend('Hello World');
+  // }
 
   const onThreadChange = (threadId) => setCurrentThreadId(threadId);
 
@@ -58,7 +60,7 @@ export default function DirectChat({
 
   function onSendMessage(message) {
     const userName = conversations[currentThreadId].username;
-    directSendMessage({ token, userName, message });
+    directSendMessage({ token, userName, message, threadId: currentThreadId, userId: myId });
   };
 
   return (
@@ -70,29 +72,36 @@ export default function DirectChat({
           currentThreadId={currentThreadId}
         />
       </PermanentDrawer>
-      <div
-        style={{ background: 'red', width: ' 300px', height: '300px' }}
-        onClick={tryToSend}
-      >
-
-      </div>
-      {/* <WSChat /> */}
       <Chat>
-        {currentThreadId && (
+        {currentThreadId && messages.length && (
           <>
-            <DirectMessages
-              messages={messages}
+            <Pagination
               onRequestNextPage={onRequestNextPage}
-              myId={myId}
               moreAvailable={moreAvailable}
             />
+            <ElementWrapper
+              id="containerElement"
+              style={{
+                position: 'relative',
+                borderBottom: '2px solid white',
+                overflowY: 'scroll',
+                height: '450px',
+              }}
+            >
+              <DirectMessages
+                messages={messages}
+                onRequestNextPage={onRequestNextPage}
+                myId={myId}
+                moreAvailable={moreAvailable}
+              />
+            </ElementWrapper>
             <InputTextField
               onSubmit={onSendMessage}
             />
+            <AnchorLink />
           </>
         )}
       </Chat>
     </>
-  )
-}
-
+  );
+};

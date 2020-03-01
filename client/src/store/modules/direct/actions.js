@@ -1,6 +1,7 @@
 import * as C from './consts';
 import { directInboxRequest, nextPageThreadRequest, directSendMessage } from '../../../services/requests';
 import { put, call, debounce } from "redux-saga/effects";
+import { scrollToElement } from '../../../utils/scroll';
 
 //send message
 export const directSendMessageAC = (payload) => {
@@ -18,11 +19,16 @@ export const directSendMessageSuccessAC = (payload) => {
 };
 
 export function* directSendMessageGenerator({ payload }) {
-  
+  const { threadId, message, userId } = payload;
+
   try {
     const resp = yield call(() => directSendMessage(payload));
     const data = yield resp.json();
-    yield put(directSendMessageSuccessAC(data));
+    yield put(directSendMessageSuccessAC({
+      threadId: threadId,
+      message: [{ text: message, userId: userId }],
+    }));
+    yield call(() => scrollToElement('containerElement', 'lastMessage'));
   } catch (error) {
     console.log(error);
   }
@@ -53,6 +59,7 @@ export function* directPagesGenerator({ payload }) {
     const resp = yield call(() => nextPageThreadRequest(payload));
     const data = yield resp.json();
     yield put(receivedDirectNextPageAC({ ...data, threadId: payload.threadId }));
+    yield call(() => scrollToElement('containerElement', 'firstMessage'));
   } catch (error) {
     console.log(error);
   }
