@@ -11,6 +11,7 @@ import Pagination from '../../components/pagination';
 
 export default function DirectChat({
   requestDirectNextPage,
+  directReceiveMessage,
   requestDirectInbox,
   directSendMessage,
   conversations,
@@ -31,15 +32,19 @@ export default function DirectChat({
     if (currentThreadId && !getThreadsDirectState()) onRequestNextPage();
   }, [currentThreadId]);
 
-  const WS = useContext(WSProvider.Context);
+  const { WSSend, WSOnMessage } = useContext(WSProvider.Context);
 
-  // useEffect(() => {
-  //   WS.WSOnMessage(console.log);
-  // }, [WS.WSOnMessage]);
+  const onReceiveMessage = (payload) => {
+    if (payload !== 'keep_alive') directReceiveMessage(payload);
+  };
+
+  useEffect(() => {
+    WSOnMessage(onReceiveMessage);
+  }, [WSOnMessage]);
 
   // const tryToSend = () => {
   //   console.log('\x1b[36m', 'send message');
-  //   WS.WSSend('Hello World');
+  //   WSSend('Hello World');
   // }
 
   const onThreadChange = (threadId) => setCurrentThreadId(threadId);

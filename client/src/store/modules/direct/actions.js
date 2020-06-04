@@ -3,6 +3,19 @@ import { directInboxRequest, nextPageThreadRequest, directSendMessage } from '..
 import { put, call, debounce } from "redux-saga/effects";
 import { scrollToElement } from '../../../utils/scroll';
 
+//receive message
+export const directReceiveMessageAC = (payload) => {
+  const { message: { thread_id, text, user_id } } = JSON.parse(payload);
+  setImmediate(() => scrollToElement('containerElement', 'lastMessage'));
+  return {
+    type: C.DIRECT_RECEIVE_MESSAGE,
+    payload: {
+      threadId: thread_id,
+      message: { text, userId: user_id }
+    }
+  }
+};
+
 //send message
 export const directSendMessageAC = (payload) => {
   return {

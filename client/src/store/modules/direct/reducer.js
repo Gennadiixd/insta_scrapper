@@ -22,7 +22,11 @@ const direct = (state = initState, action) => {
         .updateIn(['directInbox', payload.threadId, 'chat'], arr =>
           payload.items.concat(arr))
         .mergeDeepIn(['pages', payload.threadId], { state: payload.state })
-    case C.DIRECT_SEND_MESSAGE_SUCCESS:
+    // case C.DIRECT_SEND_MESSAGE_SUCCESS:
+    //   return state
+    //     .updateIn(['directInbox', payload.threadId, 'chat'], arr =>
+    //       arr.concat(payload.message))
+    case C.DIRECT_RECEIVE_MESSAGE:
       return state
         .updateIn(['directInbox', payload.threadId, 'chat'], arr =>
           arr.concat(payload.message))
